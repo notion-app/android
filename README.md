@@ -6,8 +6,8 @@ Notion is a note-taking application that allows users to collaboratively take no
 
 Notion uses a number of open source projects to work properly:
 
-* [ButterKnife] - http://jakewharton.github.io/butterknife/
-* [Retrofit] - https://github.com/square/retrofit
+* ButterKnife - http://jakewharton.github.io/butterknife/
+* Retrofit - https://github.com/square/retrofit
 
 
 
