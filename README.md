@@ -23,4 +23,12 @@ Import to Android Studio, build, and enjoy!
 
 ### Todos
 
+### Colors Theme
+
+
+#38474F
+#FEE233
+
+
+
  - Everything
