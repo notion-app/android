@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tylorgarrett.notion.fragments.LoginFragment"
+    android:background="@color/NotionDark">
+
+
+    <ImageView
+        android:id="@+id/login_imageview"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:paddingLeft="20dp"
+        android:src="@drawable/notion_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:contentDescription="Notion Logo" />
+
+    <TextView
+        android:id="@+id/login_textview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_below="@id/login_imageview"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:textColor="@color/NotionYellow"
+        android:layout_marginTop="15dp"
+        android:textSize="36sp"/>
+
+    <com.rey.material.widget.Button
+        android:id="@+id/login_button"
+        android:text="@string/facebook_login"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:textColor="@color/white"
+        android:background="@color/FacebookBlue"
+        android:layout_centerHorizontal="true"
+        style="@style/Material.Drawable.Ripple.Wave"/>
+
+</RelativeLayout>

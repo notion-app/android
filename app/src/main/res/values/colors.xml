@@ -2,4 +2,6 @@
 <resources>
     <color name="NotionYellow">#FEE233</color>
     <color name="NotionDark">#38474F</color>
+    <color name="FacebookBlue">#3B5998</color>
+    <color name="white">#ffffff</color>
 </resources>
