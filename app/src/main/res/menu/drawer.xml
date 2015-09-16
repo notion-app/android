@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:checked="true"
+            android:title="@string/title_section1"/>
+        <item
+            android:id="@+id/navigation_item_2"
+            android:title="@string/title_section2"/>
+        <item
+            android:id="@+id/navigation_item_3"
+            android:title="@string/title_section3"/>
+        <item
+            android:id="@+id/navigation_item_4"
+            android:title="@string/title_section4"/>
+    </group>
+</menu>

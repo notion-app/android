@@ -61,19 +61,18 @@ public class LoginFragment extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                activity.setIsLoggedIn(true);
                 restoreActionBar();
                 activity.userLoggedIn();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(activity, "Cacnelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Cancelled", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(activity, "Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Error Occurred", Toast.LENGTH_LONG).show();
             }
         });
         return v;
