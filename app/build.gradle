@@ -23,6 +23,9 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
@@ -34,4 +37,5 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
 }

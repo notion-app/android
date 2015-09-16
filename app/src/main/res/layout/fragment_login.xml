@@ -27,18 +27,15 @@
         android:layout_marginTop="15dp"
         android:textSize="36sp"/>
 
-    <com.rey.material.widget.Button
+    <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
-        android:text="@string/facebook_login"
-        android:layout_width="fill_parent"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
-        android:textColor="@color/white"
-        android:background="@color/FacebookBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        style="@style/Material.Drawable.Ripple.Wave"/>
+        android:layout_marginTop="30dp" />
 
 </RelativeLayout>
