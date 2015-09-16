@@ -10,9 +10,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">Notebooks</string>
+    <string name="title_section2">Notes</string>
+    <string name="title_section3">Archive</string>
+    <string name="title_section4">Trash</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
