@@ -1,7 +1,5 @@
 package com.tylorgarrett.notion;
 
-import android.content.res.ColorStateList;
-import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -11,13 +9,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 
 import butterknife.Bind;
@@ -26,6 +29,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     LoginFragment loginFragment;
+
+    @Bind(R.id.toolbar)
+    public Toolbar toolbar;
 
     @Bind(R.id.navigation_view)
     public NavigationView navigationView;
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setUpToolbar();
         loginFragment = LoginFragment.newInstance();
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -61,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
         actionBarDrawerToggle.syncState();
+        setSupportActionBar(toolbar);
 
         if ( !isLoggedIn() ){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -95,4 +102,29 @@ public class MainActivity extends AppCompatActivity {
         return token != null;
     }
 
+    public void setUpToolbar(){
+        //toolbar.setTitle(getResources().getString(R.string.app_name));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.NotionYellow));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.getItem(0);
+        SpannableString searchString = new SpannableString("Log Out");
+        searchString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.NotionYellow)), 0, searchString.length(), 0);
+        searchItem.setTitle(searchString);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int option = item.getItemId();
+        switch (option) {
+            case R.id.action_logout:
+                LoginManager.getInstance().logOut();
+                performFragmentTransaction(LoginFragment.newInstance(), false);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

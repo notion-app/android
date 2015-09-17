@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context="com.tylorgarrett.notion.MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include android:id="@+id/toolbar"
+            layout="@layout/tool_bar" />
+    </LinearLayout>
+
+
+
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_height="match_parent"
@@ -15,8 +24,7 @@
         app:headerLayout="@layout/nav_drawer_header"
         android:background="@color/NotionDark"
         app:menu="@menu/drawer"
-        app:itemTextColor="@color/NotionYellow"
-        />
+        app:itemTextColor="@color/NotionYellow" />
 
 
 </android.support.v4.widget.DrawerLayout>

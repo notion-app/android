@@ -1,8 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/NotionYellow</item>
+        <item name="colorPrimaryDark">@color/NotionDark</item>
+        <item name="android:actionMenuTextColor">@color/NotionYellow</item>
     </style>
 
 </resources>
