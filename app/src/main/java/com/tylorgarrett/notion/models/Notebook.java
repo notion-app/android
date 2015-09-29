@@ -1,29 +1,33 @@
 package com.tylorgarrett.notion.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tylorgarrett on 9/15/15.
  */
 public class Notebook {
-    private String notebookTitle;
-    private String id;
+    private List<Note> notes;
+    private String title;
 
-    public Notebook(String notebookTitle) {
-        this.notebookTitle = notebookTitle;
+    public Notebook(String title) {
+        this.title = title;
+        notes = new ArrayList<Note>();
     }
 
-    public String getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getNotebookTitle() {
-        return notebookTitle;
+    public void addNote(Note note){
+        notes.add(note);
     }
 
-    public void setNotebookTitle(String notebookTitle) {
-        this.notebookTitle = notebookTitle;
+    public int getNoteCount(){
+        return notes.size();
     }
 }

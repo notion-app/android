@@ -22,6 +22,7 @@ import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.tylorgarrett.notion.fragments.LoginFragment;
+import com.tylorgarrett.notion.fragments.NotionFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,6 +52,25 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                int option = menuItem.getItemId();
+                menuItem.setChecked(true);
+                String title = "";
+                switch ( option ){
+                    case R.id.navigation_item_1:
+                        title = "Notebooks";
+                        break;
+                    case R.id.navigation_item_2:
+                        title = "Notes";
+                        break;
+                    case R.id.navigation_item_3:
+                        title = "Archive";
+                        break;
+                    case R.id.navigation_item_4:
+                        title = "Trash";
+                        break;
+                }
+                drawerLayout.closeDrawer(Gravity.LEFT);
+                performFragmentTransaction(NotionFragment.newInstance(title), true);
                 return false;
             }
         });
@@ -81,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void performFragmentTransaction(Fragment fragment, boolean addToBackStack){
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction().replace(R.id.drawer_layout, fragment);
+        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, fragment);
         if ( addToBackStack ){
             ft.addToBackStack(null);
         }
@@ -92,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         if ( loginFragment != null ){
             getSupportFragmentManager().beginTransaction().remove(loginFragment).commit();
         }
+        performFragmentTransaction(NotionFragment.newInstance("Notebooks"), false);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerLayout.openDrawer(Gravity.LEFT);
     }
@@ -124,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_logout:
                 LoginManager.getInstance().logOut();
                 performFragmentTransaction(LoginFragment.newInstance(), false);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -20,9 +20,12 @@
 
     <string name="action_example">Example action</string>
 
-    <string name="facebook_app_id">1477367869234332</string>
+    <string name="facebook_app_id">884810131605384</string>
     <string name="test_name">Tylor Garrett</string>
 
     <string name="action_search">Search</string>
     <string name="action_logout">Log Out</string>
+
+    <string name="notion_header">CS182 Discrete Math</string>
+    <string name="notion_subheader">13 Notes</string>
 </resources>
