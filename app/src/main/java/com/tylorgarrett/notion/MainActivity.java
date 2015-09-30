@@ -21,8 +21,13 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 import com.tylorgarrett.notion.fragments.NotionFragment;
+import com.tylorgarrett.notion.models.Note;
+import com.tylorgarrett.notion.models.Notebook;
+
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +35,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     LoginFragment loginFragment;
+    NotionData notionData;
 
     @Bind(R.id.toolbar)
     public Toolbar toolbar;
@@ -48,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setUpToolbar();
         loginFragment = LoginFragment.newInstance();
-
+        notionData = NotionData.getInstance();
+        mockSomeData();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -114,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         }
         performFragmentTransaction(NotionFragment.newInstance("Notebooks"), false);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        drawerLayout.openDrawer(Gravity.LEFT);
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
 
@@ -124,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setUpToolbar(){
-        //toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setTitleTextColor(getResources().getColor(R.color.NotionYellow));
     }
 
@@ -148,5 +154,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void mockSomeData(){
+        int notebookCount = 8;
+        int noteCount = 5;
+        String[] noteTitles = {"Lecture One", "Homework 2", "Exam 3", "Study Guide", "Final Exam"};
+        String[] notebookTitles = {"CS182", "CS354", "Senior Project", "Discrete Mathematics", "Applied Leadership", "Intro To Law", "Health 101", "Wine Tasting"};
+        for (int i=0; i<notebookCount; i++){
+            Notebook notebook = new Notebook(notebookTitles[i]);
+            for (int j=0; j<noteCount; j++ ){
+                notebook.addNote(new Note(noteTitles[j]));
+            }
+            notionData.addNotebook(notebook);
+        }
     }
 }

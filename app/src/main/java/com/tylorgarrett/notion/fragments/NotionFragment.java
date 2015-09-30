@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.adapters.MyAdapter;
+import com.tylorgarrett.notion.data.NotionData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,7 +22,10 @@ import butterknife.ButterKnife;
 
 public class NotionFragment extends Fragment {
 
+    NotionData notionData;
+
     String title;
+    List data;
 
     @Bind(R.id.notion_recyclerview)
     public RecyclerView mRecyclerView;
@@ -41,7 +48,15 @@ public class NotionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.title = getArguments().getString("title");
+        notionData = NotionData.getInstance();
+        title = getArguments().getString("title");
+        if ( title.equals("Notebooks") ) {
+            this.data = notionData.getNotebooks();
+        } else if ( title.equals("Notes") ){
+            this.data = notionData.getNotes();
+        } else {
+            this.data = new ArrayList(0);
+        }
     }
 
     @Override
@@ -51,7 +66,7 @@ public class NotionFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapter(title);
+        mAdapter = new MyAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
         return v;
     }

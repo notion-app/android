@@ -8,11 +8,17 @@
     tools:context="com.tylorgarrett.notion.MainActivity">
 
     <RelativeLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <include android:id="@+id/toolbar"
             layout="@layout/tool_bar" />
+        <RelativeLayout
+            android:id="@+id/fragment_container"
+            android:layout_below="@id/toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        </RelativeLayout>
     </RelativeLayout>
 
 

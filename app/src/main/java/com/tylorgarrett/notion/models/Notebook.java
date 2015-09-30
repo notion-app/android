@@ -25,6 +25,11 @@ public class Notebook {
 
     public void addNote(Note note){
         notes.add(note);
+        note.setNotebookName(title);
+    }
+
+    public List<Note> getNotes(){
+        return notes;
     }
 
     public int getNoteCount(){
