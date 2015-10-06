@@ -5,7 +5,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notion_recyclerview"
-        android:scrollbars="none"
+        android:scrollbars="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 

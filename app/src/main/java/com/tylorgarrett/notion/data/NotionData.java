@@ -13,6 +13,7 @@ public class NotionData {
     private List<Notebook> notebooks;
     private List<Note> notes;
 
+
     private static NotionData instance = null;
 
     public NotionData(){

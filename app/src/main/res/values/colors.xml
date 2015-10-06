@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="NotionYellow">#FEE233</color>
-    <color name="NotionDark">#38474F</color>
+    <color name="NotionYellow">#F39C12</color>
+    <color name="NotionDark">#22313F</color>
     <color name="FacebookBlue">#3B5998</color>
     <color name="white">#ffffff</color>
 </resources>

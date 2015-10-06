@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -24,8 +22,10 @@ import com.facebook.login.LoginManager;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 import com.tylorgarrett.notion.fragments.NotionFragment;
+import com.tylorgarrett.notion.models.Course;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.School;
 
 import java.util.Random;
 
@@ -157,14 +157,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void mockSomeData(){
-        int notebookCount = 8;
-        int noteCount = 5;
-        String[] noteTitles = {"Lecture One", "Homework 2", "Exam 3", "Study Guide", "Final Exam"};
-        String[] notebookTitles = {"CS182", "CS354", "Senior Project", "Discrete Mathematics", "Applied Leadership", "Intro To Law", "Health 101", "Wine Tasting"};
-        for (int i=0; i<notebookCount; i++){
-            Notebook notebook = new Notebook(notebookTitles[i]);
-            for (int j=0; j<noteCount; j++ ){
-                notebook.addNote(new Note(noteTitles[j]));
+        String[] notebookNames = {"CS182", "CS490", "OLS386", "CS426", "EAPS112", "PSY120", "PE304", "ECON251", "OLS182", "CNIT170", "RT314", "GS190"};
+        String[] noteNames = {"Note000", "Note001", "Note002", "Note003", "Note004", "Note005", "Note006", "Note007", "Note008", "Note009", "Note010", "Note011", "Note012", "Note013", "Note014", "Note015"};
+
+        int randomOne = new Random().nextInt(notebookNames.length-1);
+
+        for (int i=0; i<randomOne; i++){
+            Notebook notebook = new Notebook(notebookNames[i]);
+            int randomTwo = new Random().nextInt(noteNames.length);
+            for (int j=0; j<randomTwo; j++){
+                notebook.addNote(new Note(noteNames[j]));
             }
             notionData.addNotebook(notebook);
         }
