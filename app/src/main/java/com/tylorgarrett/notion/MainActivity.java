@@ -21,11 +21,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.LoginFragment;
-import com.tylorgarrett.notion.fragments.NotionFragment;
-import com.tylorgarrett.notion.models.Course;
+import com.tylorgarrett.notion.fragments.NotebooksFragment;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
-import com.tylorgarrett.notion.models.School;
 
 import java.util.Random;
 
@@ -66,18 +64,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_item_1:
                         title = "Notebooks";
                         break;
-                    case R.id.navigation_item_2:
-                        title = "Notes";
-                        break;
-                    case R.id.navigation_item_3:
-                        title = "Archive";
-                        break;
-                    case R.id.navigation_item_4:
-                        title = "Trash";
-                        break;
                 }
                 drawerLayout.closeDrawer(Gravity.LEFT);
-                performFragmentTransaction(NotionFragment.newInstance(title), true);
+                performFragmentTransaction(NotebooksFragment.newInstance(title), true);
                 return false;
             }
         });
@@ -119,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         if ( loginFragment != null ){
             getSupportFragmentManager().beginTransaction().remove(loginFragment).commit();
         }
-        performFragmentTransaction(NotionFragment.newInstance("Notebooks"), false);
+        performFragmentTransaction(NotebooksFragment.newInstance("Notebooks"), false);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
@@ -159,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     public void mockSomeData(){
         String[] notebookNames = {"CS182", "CS490", "OLS386", "CS426", "EAPS112", "PSY120", "PE304", "ECON251", "OLS182", "CNIT170", "RT314", "GS190"};
         String[] noteNames = {"Note000", "Note001", "Note002", "Note003", "Note004", "Note005", "Note006", "Note007", "Note008", "Note009", "Note010", "Note011", "Note012", "Note013", "Note014", "Note015"};
+        String content = "Text messaging, or texting, is the act of composing and sending brief, electronic messages between two or more mobile phones, or fixed or portable devices over a phone network. The term originally referred to messages sent using the Short Message Service (SMS). It has grown to include messages containing image, video, and sound content (known as MMS messages). The sender of a text message is known as a texter, while the service itself has different colloquialisms depending on the region. It may simply be referred to as a text in North America, the United Kingdom, Australia, New Zealand and the Philippines, an SMS in most of mainland Europe, and an MMS or SMS in the Middle East, Africa, and Asia.";
 
         int randomOne = new Random().nextInt(notebookNames.length-1);
 
@@ -166,7 +156,9 @@ public class MainActivity extends AppCompatActivity {
             Notebook notebook = new Notebook(notebookNames[i]);
             int randomTwo = new Random().nextInt(noteNames.length);
             for (int j=0; j<randomTwo; j++){
-                notebook.addNote(new Note(noteNames[j]));
+                Note newNote = new Note(noteNames[j]);
+                newNote.setContent(new StringBuffer(content));
+                notebook.addNote(newNote);
             }
             notionData.addNotebook(notebook);
         }

@@ -19,13 +19,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/*
+ * A simple {@link Fragment} subclass.
+ */
+public class NotebookNotesFragment extends Fragment {
 
-public class NotebooksFragment extends Fragment {
-
-    NotionData notionData;
-
-    String title;
-    List data;
+    List notes;
 
     @Bind(R.id.notebooks_recyclerview)
     public RecyclerView mRecyclerView;
@@ -34,35 +33,36 @@ public class NotebooksFragment extends Fragment {
     public RecyclerView.Adapter mAdapter;
     public RecyclerView.LayoutManager mLayoutManager;
 
+    public NotebookNotesFragment() {}
 
-    public static NotebooksFragment newInstance(String title) {
-        NotebooksFragment fragment = new NotebooksFragment();
+    public static Fragment newInstance(String id){
+        NotebookNotesFragment f = new NotebookNotesFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
-        fragment.setArguments(args);
-        return fragment;
+        args.putString("id", id);
+        f.setArguments(args);
+        return f;
     }
-
-    public NotebooksFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notionData = NotionData.getInstance();
-        title = getArguments().getString("title");
-        this.data = notionData.getNotebooks();
+        String id = getArguments().getString("id");
+        notes = NotionData.getInstance().getNotebookById(id).getNotes();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_notion, container, false);
         ButterKnife.bind(this, v);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapter(data, (MainActivity) getActivity());
-        mRecyclerView.setAdapter(mAdapter);
+        if ( notes != null ){
+            mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new GridLayoutManager(getActivity(), 2);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mAdapter = new MyAdapter(notes, (MainActivity) getActivity());
+            mRecyclerView.setAdapter(mAdapter);
+        }
         return v;
     }
+
 
 }

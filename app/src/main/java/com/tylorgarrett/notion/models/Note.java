@@ -27,4 +27,12 @@ public class Note {
     public String getNotebookName(){
         return notebookName;
     }
+
+    public StringBuffer getContent() {
+        return content;
+    }
+
+    public void setContent(StringBuffer content) {
+        this.content = content;
+    }
 }

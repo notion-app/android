@@ -42,4 +42,23 @@ public class NotionData {
         }
         return notes;
     }
+
+    public Notebook getNotebookById(String id){
+        for ( Notebook notebook : notebooks ){
+            if ( notebook.getTitle().equals(id) ){
+                return notebook;
+            }
+        }
+        return null;
+    }
+
+    public Note getNoteById(String noteID, String notebookID){
+        Notebook notebook = getNotebookById(notebookID);
+        for (Note note: notebook.getNotes() ){
+            if ( note.getTitle().equals(noteID) ){
+                return note;
+            }
+        }
+        return null;
+    }
 }
