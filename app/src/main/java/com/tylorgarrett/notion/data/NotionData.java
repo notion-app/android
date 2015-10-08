@@ -61,4 +61,11 @@ public class NotionData {
         }
         return null;
     }
+
+    public void clearOut(){
+        notebooks = null;
+        notes = null;
+        notebooks = new ArrayList<Notebook>();
+        notes = new ArrayList<Note>();
+    }
 }

@@ -58,7 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
             headerText.setText(note.getTitle());
             subHeaderText.setText(note.getNotebookName());
-            imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.notebook));
+            imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.note));
             editedText.setText("Last Edited: 4 Hours Ago");
             final String noteName = note.getTitle();
             final String notebookID = note.getNotebookName();

@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,11 +20,14 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 
 
 public class NotebooksFragment extends Fragment {
 
     NotionData notionData;
+    MainActivity mainActivity;
 
     String title;
     List data;
@@ -48,6 +53,8 @@ public class NotebooksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        mainActivity = (MainActivity) getActivity();
         notionData = NotionData.getInstance();
         title = getArguments().getString("title");
         this.data = notionData.getNotebooks();
@@ -61,8 +68,19 @@ public class NotebooksFragment extends Fragment {
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(data, (MainActivity) getActivity());
-        mRecyclerView.setAdapter(mAdapter);
+        SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
+        AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
+        adapter.setDuration(500);
+        adapter.setFirstOnly(true);
+        mRecyclerView.setAdapter(adapter);
         return v;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main, menu);
+        mainActivity.toolbar.setTitle(getResources().getString(R.string.app_name));
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }

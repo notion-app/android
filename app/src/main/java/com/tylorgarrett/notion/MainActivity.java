@@ -1,5 +1,9 @@
 package com.tylorgarrett.notion;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -11,29 +15,45 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 import com.tylorgarrett.notion.fragments.NotebooksFragment;
+import com.tylorgarrett.notion.fragments.ProfileContentFragment;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
     LoginFragment loginFragment;
     NotionData notionData;
+
+    Bitmap profileImage;
+
+    String facebookUserID;
+    String facebookUserName;
 
     @Bind(R.id.toolbar)
     public Toolbar toolbar;
@@ -60,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 int option = menuItem.getItemId();
                 menuItem.setChecked(true);
                 String title = "";
-                switch ( option ){
+                switch (option) {
                     case R.id.navigation_item_1:
                         title = "Notebooks";
                         break;
@@ -68,6 +88,15 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawer(Gravity.LEFT);
                 performFragmentTransaction(NotebooksFragment.newInstance(title), true);
                 return false;
+            }
+        });
+
+        RelativeLayout navHeaderLayout = (RelativeLayout) findViewById(R.id.nav_header_layout);
+        navHeaderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performFragmentTransaction(ProfileContentFragment.newInstance(), true);
+                drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
 
@@ -111,7 +140,60 @@ public class MainActivity extends AppCompatActivity {
         performFragmentTransaction(NotebooksFragment.newInstance("Notebooks"), false);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerLayout.closeDrawer(Gravity.LEFT);
+        facebookSetUp();
     }
+
+    public void setUpNavHeader() throws IOException{
+        final CircleImageView circleImageView = (CircleImageView) findViewById(R.id.nav_header_image);
+        final TextView textView = (TextView) findViewById(R.id.nav_header_tv);
+        textView.setText(getFacebookUserName());
+        final String userID = getFacebookUserID();
+        final URL url = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = null;
+                try {
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    setProfileImage(bitmap);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+                final Bitmap result = bitmap;
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        circleImageView.setImageBitmap(result);
+                    }
+                });
+
+            }
+        }).start();
+    }
+
+    public void facebookSetUp(){
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                try {
+                    String id = jsonObject.getString("id");
+                    setFacebookUserName(jsonObject.getString("name"));
+                    setFacebookUserID(id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    setUpNavHeader();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        request.executeAsync();
+    }
+
 
 
     public boolean isLoggedIn() {
@@ -125,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem searchItem = menu.getItem(0);
         SpannableString searchString = new SpannableString("Log Out");
@@ -136,21 +219,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int option = item.getItemId();
-        switch (option) {
-            case R.id.action_logout:
-                LoginManager.getInstance().logOut();
-                performFragmentTransaction(LoginFragment.newInstance(), false);
-                break;
-        }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if ( isLoggedIn() ){
+            super.onBackPressed();
+        }
+    }
+
     public void mockSomeData(){
+        notionData.clearOut();
+
         String[] notebookNames = {"CS182", "CS490", "OLS386", "CS426", "EAPS112", "PSY120", "PE304", "ECON251", "OLS182", "CNIT170", "RT314", "GS190"};
         String[] noteNames = {"Note000", "Note001", "Note002", "Note003", "Note004", "Note005", "Note006", "Note007", "Note008", "Note009", "Note010", "Note011", "Note012", "Note013", "Note014", "Note015"};
-        String content = "Text messaging, or texting, is the act of composing and sending brief, electronic messages between two or more mobile phones, or fixed or portable devices over a phone network. The term originally referred to messages sent using the Short Message Service (SMS). It has grown to include messages containing image, video, and sound content (known as MMS messages). The sender of a text message is known as a texter, while the service itself has different colloquialisms depending on the region. It may simply be referred to as a text in North America, the United Kingdom, Australia, New Zealand and the Philippines, an SMS in most of mainland Europe, and an MMS or SMS in the Middle East, Africa, and Asia.";
-
         int randomOne = new Random().nextInt(notebookNames.length-1);
+        String content = "#Header sizes\n" +
+                "##Smaller header\n" +
+                "###Even smaller header\n" +
+                "\n" +
+                "Paragraphs are obviously supported along with all the fancy text styling you could want.\n" +
+                "There is *italic*, **bold** and ***bold italic***. Even links are supported, visit the\n" +
+                "github page for Bypass [here](https://github.com/Uncodin/bypass).\n" +
+                "\n" +
+                "* Nested List\n" +
+                "\t* One\n" +
+                "\t* Two\n" +
+                "\t* Three\n" +
+                "* One\n" +
+                "\t* One\n" +
+                "\t* Two\n" +
+                "\t* Three\n" +
+                "\n" +
+                "## Code Block Support\n" +
+                "\n" +
+                "    const char* str;\n" +
+                "    str = env->GetStringUTFChars(markdown, NULL);\n" +
+                "\t\t\t";
 
         for (int i=0; i<randomOne; i++){
             Notebook notebook = new Notebook(notebookNames[i]);
@@ -162,5 +268,29 @@ public class MainActivity extends AppCompatActivity {
             }
             notionData.addNotebook(notebook);
         }
+    }
+
+    public String getFacebookUserID() {
+        return facebookUserID;
+    }
+
+    public void setFacebookUserID(String facebookUserID) {
+        this.facebookUserID = facebookUserID;
+    }
+
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getFacebookUserName() {
+        return facebookUserName;
+    }
+
+    public void setFacebookUserName(String facebookUserName) {
+        this.facebookUserName = facebookUserName;
     }
 }

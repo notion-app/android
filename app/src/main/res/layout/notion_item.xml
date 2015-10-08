@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        card_view:cardCornerRadius="0dp">
+        card_view:cardCornerRadius="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -38,6 +38,7 @@
                 android:layout_below="@id/notion_header_layout"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:layout_margin="10dp"
                 android:contentDescription="notebook logo"
                 android:layout_centerHorizontal="true" />
 

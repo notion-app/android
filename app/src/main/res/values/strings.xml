@@ -25,7 +25,11 @@
 
     <string name="action_search">Search</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_save">Save</string>
 
     <string name="notion_header">CS182 Discrete Math</string>
     <string name="notion_subheader">13 Notes</string>
+
+    <string name="profile_settings">Profile</string>
 </resources>
