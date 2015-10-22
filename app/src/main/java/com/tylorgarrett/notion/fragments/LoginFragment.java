@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, v);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions("user_friends, email, public_profile");
         loginButton.setFragment(this);
 
         // Callback registration
