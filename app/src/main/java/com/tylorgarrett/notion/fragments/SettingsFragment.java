@@ -19,27 +19,21 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileContentFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     MainActivity mainActivity;
 
     @Bind(R.id.profile_content_logout_button)
     Button logoutButton;
 
-    @Bind(R.id.profile_content_circleimageview)
-    CircleImageView profileImage;
-
-    @Bind(R.id.profile_content_name_textview)
-    TextView profileName;
-
-    public static ProfileContentFragment newInstance() {
-        ProfileContentFragment fragment = new ProfileContentFragment();
+    public static SettingsFragment newInstance() {
+        SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ProfileContentFragment() {}
+    public SettingsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +54,6 @@ public class ProfileContentFragment extends Fragment {
                 mainActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
         });
-        profileImage.setImageBitmap(mainActivity.getProfileImage());
-        profileName.setText(mainActivity.getFacebookUserName());
         return v;
     }
 

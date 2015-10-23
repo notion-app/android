@@ -7,25 +7,37 @@ import java.util.List;
  * Created by tylorgarrett on 9/30/15.
  */
 public class School {
-    private List<Course> courses;
-    private String title;
+    String id;
+    String name;
+    String location;
 
-    public School(String title){
-        courses = new ArrayList<Course>();
-        this.title = title;
+    public School(String id, String name, String location) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public String getId() {
+        return id;
     }
 
-    public void addCourse(Course c) {
-        courses.add(c);
-        c.setSchool(this);
-    }
-    
-    public String getTitle() {
-        return title;
+    public void setId(String id) {
+        this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }

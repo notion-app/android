@@ -1,5 +1,6 @@
 package com.tylorgarrett.notion;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,20 +17,25 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 import com.tylorgarrett.notion.fragments.NotebooksFragment;
-import com.tylorgarrett.notion.fragments.ProfileContentFragment;
+import com.tylorgarrett.notion.fragments.SettingsFragment;
 import com.tylorgarrett.notion.models.LoginBody;
+import com.tylorgarrett.notion.models.School;
 import com.tylorgarrett.notion.models.User;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
@@ -36,6 +43,8 @@ import com.tylorgarrett.notion.services.NotionService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
@@ -189,11 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Response<User> response, Retrofit retrofit) {
                 currentUser = response.body();
-                try {
-                    setUpNavHeader();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                finishUserSetup();
             }
 
             @Override
@@ -203,16 +208,79 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    public void finishUserSetup(){
+        try{
+            setUpNavHeader();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        if ( currentUser.getSchool_id().equals("") ){
+            getListOfSchools();
+        }
+    }
+
+    public void getListOfSchools(){
+        Call<List<School>> schoolCall = NotionService.getApi().getSchools();
+        schoolCall.enqueue(new Callback<List<School>>() {
+            @Override
+            public void onResponse(Response<List<School>> response, Retrofit retrofit) {
+                List<School> schools = response.body();
+                setSchoolDialog(schools);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    public void setSchoolDialog(final List<School> schools){
+        List<String> schoolName = new ArrayList<String>(schools.size());
+        for (School s: schools){
+            schoolName.add(s.getName());
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select A School");
+        View view = getLayoutInflater().inflate(R.layout.school_dialog_fragment, null);
+        final AutoCompleteTextView textView = (AutoCompleteTextView) view.findViewById(R.id.school_dialog_textview);
+        textView.setThreshold(2);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schoolName);
+        textView.setAdapter(adapter);
+        builder.setView(view);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean found = false;
+                String schoolId = "";
+                String schoolName = textView.getText().toString();
+                for(School s: schools){
+                    if ( s.getName().equals(schoolName) ){
+                        found = true;
+                        schoolId = s.getId();
+                        break;
+                    }
+                }
+                if (found){
+                    currentUser.setSchool_id(schoolId);
+                } else {
+                    //ask to create a new request for adding a school.
+                    Toast.makeText(getApplicationContext(), "Requested new School to be added", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        AlertDialog schoolDialog = builder.create();
+        schoolDialog.show();
+    }
+
+
     public Bitmap getProfileImage() {
         return profileImage;
     }
 
     public void setProfileImage(Bitmap profileImage) {
         this.profileImage = profileImage;
-    }
-
-    public String getFacebookUserName() {
-        return facebookUserName;
     }
 
     @Override
@@ -237,6 +305,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setTitleTextColor(getResources().getColor(R.color.NotionYellow));
     }
 
+    public User getCurrentUser(){
+        return currentUser;
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int option = menuItem.getItemId();
@@ -254,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClick(View v) {
-        performFragmentTransaction(ProfileContentFragment.newInstance(), true);
+        performFragmentTransaction(SettingsFragment.newInstance(), true);
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 }
