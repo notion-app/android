@@ -7,32 +7,49 @@ import java.util.List;
  * Created by tylorgarrett on 9/15/15.
  */
 public class Notebook {
-    private List<Note> notes;
-    private String title;
+    private String id;
+    private String user_id;
+    private String notebook_id;
 
-    public Notebook(String title) {
-        this.title = title;
-        notes = new ArrayList<Note>();
+    public Notebook(String id, String user_id, String notebook_id) {
+        this.id = id;
+        this.user_id = user_id;
+        this.notebook_id = notebook_id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getId() {
+        return id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void addNote(Note note){
-        notes.add(note);
-        note.setNotebookName(title);
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getNotebook_id() {
+        return notebook_id;
+    }
+
+    public void setNotebook_id(String notebook_id) {
+        this.notebook_id = notebook_id;
     }
 
     public List<Note> getNotes(){
-        return notes;
+        return null;
+    }
+
+    public String getTitle(){
+        return "";
     }
 
     public int getNoteCount(){
-        return notes.size();
+        return 1;
     }
 }

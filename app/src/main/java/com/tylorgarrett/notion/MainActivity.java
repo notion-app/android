@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             userLoggedIn();
         }
-        mockSomeData();
     }
 
     public void performFragmentTransaction(Fragment fragment, boolean addToBackStack){
@@ -170,25 +169,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.NotionYellow)), 0, searchString.length(), 0);
         searchItem.setTitle(searchString);
         return true;
-    }
-
-    public void mockSomeData(){
-        notionData.clearOut();
-
-        String[] notebookNames = {"CS182", "CS490", "OLS386", "CS426", "EAPS112", "PSY120", "PE304", "ECON251", "OLS182", "CNIT170", "RT314", "GS190"};
-        String[] noteNames = {"Note000", "Note001", "Note002", "Note003", "Note004", "Note005", "Note006", "Note007", "Note008", "Note009", "Note010", "Note011", "Note012", "Note013", "Note014", "Note015"};
-        int randomOne = new Random().nextInt(notebookNames.length - 1);
-        String content = "ghghgh";
-        for (int i=0; i<randomOne; i++){
-            Notebook notebook = new Notebook(notebookNames[i]);
-            int randomTwo = new Random().nextInt(noteNames.length);
-            for (int j=0; j<randomTwo; j++){
-                Note newNote = new Note(noteNames[j]);
-                newNote.setContent(new StringBuffer(content));
-                notebook.addNote(newNote);
-            }
-            notionData.addNotebook(notebook);
-        }
     }
 
     public void getUserData(){

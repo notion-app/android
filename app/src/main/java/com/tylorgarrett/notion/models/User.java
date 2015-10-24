@@ -6,7 +6,6 @@ package com.tylorgarrett.notion.models;
 public class User {
     String id;
     String name;
-    String token;
     String email;
     boolean verified;
     String school_id;
@@ -15,10 +14,9 @@ public class User {
     String fb_auth_token;
     String fb_profile_pic;
 
-    public User(String id, String name, String token, String email, boolean verified, String school_id, String auth_method, String fb_user_id, String fb_auth_token, String fb_profile_pic) {
+    public User(String id, String name, String email, boolean verified, String school_id, String auth_method, String fb_user_id, String fb_auth_token, String fb_profile_pic) {
         this.id = id;
         this.name = name;
-        this.token = token;
         this.email = email;
         this.verified = verified;
         this.school_id = school_id;
@@ -42,14 +40,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getEmail() {

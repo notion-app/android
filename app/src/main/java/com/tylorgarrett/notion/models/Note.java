@@ -4,35 +4,81 @@ package com.tylorgarrett.notion.models;
  * Created by tylorgarrett on 9/15/15.
  */
 public class Note {
+    private String id;
     private String title;
-    private String notebookName;
-    private StringBuffer content;
+    private String owner;
+    private String content;
+    private String endorsements;
+    private String created_at;
+    private String updated_at;
 
-    public Note(String title){
+    public Note(String id, String title, String owner, String content, String endorsements, String created_at, String updated_at) {
+        this.id = id;
         this.title = title;
+        this.owner = owner;
+        this.content = content;
+        this.endorsements = endorsements;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
     }
 
-    public String getTitle(){
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setNotebookName(String notebookName){
-        this.notebookName = notebookName;
+    public String getOwner() {
+        return owner;
     }
 
-    public String getNotebookName(){
-        return notebookName;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
-    public StringBuffer getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(StringBuffer content) {
+    public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getEndorsements() {
+        return endorsements;
+    }
+
+    public void setEndorsements(String endorsements) {
+        this.endorsements = endorsements;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public String getNotebookName(){
+        return "";
     }
 }
