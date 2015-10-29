@@ -20,7 +20,7 @@ import java.util.List;
 /*
  * Created by tylorgarrett on 9/21/15.
  */
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     List data;
     MainActivity mainActivity;
@@ -34,14 +34,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MainAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.notion_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(MyAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(MainAdapter.ViewHolder holder, int position) {
 
         LinearLayout linearLayout = (LinearLayout) holder.v.findViewById(R.id.notion_header_layout);
         TextView headerText = (TextView) holder.v.findViewById(R.id.notion_header_textview);
@@ -72,11 +72,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             notebook = (Notebook) data.get(position);
             linearLayout.setBackgroundColor(mainActivity.getResources().getColor(R.color.NotionYellow));
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
-            headerText.setText(notebook.getTitle());
+            headerText.setText(notebook.getName());
             subHeaderText.setText(notebook.getNoteCount() + " Notes");
             imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.notebook));
             editedText.setText("Last Edited: 4 Hours Ago");
-            final String notebookName = notebook.getTitle();
+            final String notebookName = notebook.getName();
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -92,7 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return data.size();
     }
 
-    public MyAdapter(List data, MainActivity mainActivity) {
+    public MainAdapter(List data, MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.data = data;
     }

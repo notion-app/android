@@ -1,5 +1,14 @@
 package com.tylorgarrett.notion.models;
 
+import com.tylorgarrett.notion.services.NotionService;
+
+import java.io.IOException;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 /**
  * Created by tylorgarrett on 10/21/15.
  */
