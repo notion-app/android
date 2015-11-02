@@ -14,6 +14,7 @@ import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.SubscriptionSettingsFragment;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.SubscriptionBody;
+import com.tylorgarrett.notion.models.SubscriptionDeleteBody;
 import com.tylorgarrett.notion.services.NotionService;
 
 import org.w3c.dom.Text;
@@ -83,7 +84,9 @@ public class NotebookSettingsDialog {
                 Notebook results = response.body();
                 notebook.setName(results.getName());
                 SubscriptionSettingsFragment f = (SubscriptionSettingsFragment) mainActivity.findFragmentByTag(SubscriptionSettingsFragment.TAG);
-                f.updateAdapter();
+                if ( f.mAdapter != null ){
+                    f.updateAdapter();
+                }
             }
 
             @Override
@@ -94,11 +97,15 @@ public class NotebookSettingsDialog {
     }
 
     public void deleteSubscription(){
-        Call<Notebook> call = NotionService.getApi().deleteSubScription(mainActivity.getCurrentUser().getFb_auth_token(), mainActivity.getCurrentUser().getId(), new SubscriptionBody(notebook.getNotebook_id(), notebook.getName()));
+        Call<Notebook> call = NotionService.getApi().deleteSubscription(mainActivity.getCurrentUser().getFb_auth_token(), mainActivity.getCurrentUser().getId(), new SubscriptionDeleteBody(notebook.getId()));
         call.enqueue(new Callback<Notebook>() {
             @Override
             public void onResponse(Response<Notebook> response, Retrofit retrofit) {
                 NotionData.getInstance().removeNotebook(response.body());
+                SubscriptionSettingsFragment f = (SubscriptionSettingsFragment) mainActivity.findFragmentByTag(SubscriptionSettingsFragment.TAG);
+                if ( f.mAdapter != null ){
+                    f.updateAdapter();
+                }
             }
 
             @Override

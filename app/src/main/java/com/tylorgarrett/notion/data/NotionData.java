@@ -140,6 +140,8 @@ public class NotionData {
     }
 
     public void removeNotebook(Notebook nb){
-        notebooks.remove(nb);
+        if ( notebooks.contains(nb) ){
+            notebooks.remove(nb);
+        }
     }
 }

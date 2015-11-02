@@ -8,6 +8,7 @@ import com.tylorgarrett.notion.models.School;
 import com.tylorgarrett.notion.models.Section;
 import com.tylorgarrett.notion.models.SetSchool;
 import com.tylorgarrett.notion.models.SubscriptionBody;
+import com.tylorgarrett.notion.models.SubscriptionDeleteBody;
 import com.tylorgarrett.notion.models.User;
 
 import java.util.List;
@@ -50,6 +51,6 @@ public interface NotionAPI {
     Call<Notebook> changeSubscription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionBody body);
 
     @DELETE("v1/user/{user_id}/subscription")
-    Call<Notebook> deleteSubScription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionBody body);
+    Call<Notebook> deleteSubscription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionDeleteBody body);
 
 }

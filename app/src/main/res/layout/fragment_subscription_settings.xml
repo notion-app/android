@@ -2,11 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
     tools:context="com.tylorgarrett.notion.fragments.SubscriptionSettingsFragment">
+
+    <TextView
+        android:id="@+id/subscription_settings_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notebook_settings"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/subscription_settings_recyclerview"
         android:scrollbars="horizontal"
+        android:layout_below="@id/subscription_settings_textview"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent" />
 

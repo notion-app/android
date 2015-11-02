@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.data.NotionData;
+import com.tylorgarrett.notion.fragments.NotebooksFragment;
+import com.tylorgarrett.notion.fragments.SubscriptionSettingsFragment;
 import com.tylorgarrett.notion.models.Course;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.Section;
@@ -25,8 +27,9 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import retrofit.http.Path;
 
-/**
+/*
  * Created by tylorgarrett on 10/29/15.
  */
 public class NewNotebookDialog {
@@ -130,13 +133,21 @@ public class NewNotebookDialog {
             @Override
             public void onResponse(Response<Notebook> response, Retrofit retrofit) {
                 //check for 500 response
-                Log.d("api", response.message().toString());
                 NotionData.getInstance().addNotebook(response.body());
+                SubscriptionSettingsFragment f = (SubscriptionSettingsFragment) mainActivity.findFragmentByTag(SubscriptionSettingsFragment.TAG);
+                NotebooksFragment f2 = (NotebooksFragment) mainActivity.findFragmentByTag(NotebooksFragment.TAG);
+                if ( f.mAdapter != null ){
+                    f.updateAdapter();
+                }
+                if ( f2.mAdapter != null ){
+                    f2.mAdapter.notifyDataSetChanged();
+                }
+                mainActivity.debugToast("Add User Subscription Success " + response.message());
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                mainActivity.debugToast("Add User Subscription Failure " + t.getMessage());
             }
         });
     }
