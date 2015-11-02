@@ -26,6 +26,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsFragment extends Fragment{
 
+    public static String TAG = "SettingsFragment";
+
     MainActivity mainActivity;
 
     @Bind(R.id.settings_logout_cardview)
@@ -72,10 +74,10 @@ public class SettingsFragment extends Fragment{
     public void onClick(View v){
         if ( v.getId() == R.id.settings_logout_cardview ){
             LoginManager.getInstance().logOut();
-            mainActivity.performFragmentTransaction(LoginFragment.newInstance(), false);
+            mainActivity.performFragmentTransaction(LoginFragment.newInstance(), false, LoginFragment.TAG);
             mainActivity.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         } else if ( v.getId() == R.id.setting_notebook_cardview ){
-            mainActivity.performFragmentTransaction(SubscriptionSettingsFragment.newInstance(), true);
+            mainActivity.performFragmentTransaction(SubscriptionSettingsFragment.newInstance(), true, SubscriptionSettingsFragment.TAG);
         } else if (v.getId() == R.id.setting_note_cardview ){
 
         } else {

@@ -3,17 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/add_notebook_dialog_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <Spinner
         android:id="@+id/add_notebook_dialog_spinner"
-        android:layout_below="@id/add_notebook_dialog_textview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
+    <EditText
+        android:id="@+id/add_notebook_dialog_edittext"
+        android:layout_below="@id/add_notebook_dialog_spinner"
+        android:hint="@string/notebook_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

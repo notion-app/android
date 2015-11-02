@@ -41,10 +41,14 @@
     <string name="note_edits">Delete current notes.</string>
 
     <string name="select_course">Select Course</string>
+    <string name="select_section">Select Section</string>
 
     <string name="add_subscription">Add New Notebook</string>
+    <string name="delete_notebook">Delete Notebook</string>
 
     <string name="settings_content">Content</string>
     <string name="profile_school_label">School: </string>
     <string name="profile_edits">Edit your profile settings including default school, name and profile picture.</string>
+
+    <string name="notebook_name">Notebook Name</string>
 </resources>

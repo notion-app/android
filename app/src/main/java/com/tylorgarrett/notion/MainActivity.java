@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NotionData notionData;
     Bitmap profileImage;
     User currentUser;
-    OnUserSubscriptionsReadyListener listener;
 
     @Bind(R.id.toolbar)
     public Toolbar toolbar;
@@ -99,20 +98,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if ( !isLoggedIn() ){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            performFragmentTransaction(loginFragment, false);
+            performFragmentTransaction(loginFragment, false, LoginFragment.TAG);
         } else {
             userLoggedIn();
         }
 
     }
 
-    public void performFragmentTransaction(Fragment fragment, boolean addToBackStack){
+    public void performFragmentTransaction(Fragment fragment, boolean addToBackStack, String tag){
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, fragment);
+        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, fragment, tag);
         if ( addToBackStack ){
             ft.addToBackStack(null);
         }
         ft.commit();
+    }
+
+    public Fragment findFragmentByTag(String tag){
+        FragmentManager fm = getSupportFragmentManager();
+        return fm.findFragmentByTag(tag);
     }
 
     public void userLoggedIn(){
@@ -282,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if ( loginFragment != null ){
             getSupportFragmentManager().beginTransaction().remove(loginFragment).commit();
         }
-        performFragmentTransaction(NotebooksFragment.getInstance(), false);
+        performFragmentTransaction(NotebooksFragment.getInstance(), false, NotebooksFragment.TAG);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
@@ -332,13 +336,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawerLayout.closeDrawer(Gravity.LEFT);
-        performFragmentTransaction(NotebooksFragment.getInstance(), true);
+        performFragmentTransaction(NotebooksFragment.getInstance(), true, NotebooksFragment.TAG);
         return false;
     }
 
     @Override
     public void onClick(View v) {
-        performFragmentTransaction(SettingsFragment.newInstance(), true);
+        performFragmentTransaction(SettingsFragment.newInstance(), true, SettingsFragment.TAG);
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 }

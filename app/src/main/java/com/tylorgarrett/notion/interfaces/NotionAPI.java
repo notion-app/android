@@ -14,6 +14,7 @@ import java.util.List;
 
 import retrofit.Call;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
@@ -45,5 +46,10 @@ public interface NotionAPI {
     @POST("v1/user/{user_id}/subscription")
     Call<Notebook> addSubscription(@Path("user_id") String userId, @Header("token") String token, @Body SubscriptionBody body);
 
+    @PUT("v1/user/{user_id}/subscription")
+    Call<Notebook> changeSubscription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionBody body);
+
+    @DELETE("v1/user/{user_id}/subscription")
+    Call<Notebook> deleteSubScription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionBody body);
 
 }

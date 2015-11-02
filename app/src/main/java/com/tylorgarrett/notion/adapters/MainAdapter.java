@@ -65,7 +65,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainActivity.performFragmentTransaction(NoteContentFragment.newInstance(noteName, notebookID), true);
+                    mainActivity.performFragmentTransaction(NoteContentFragment.newInstance(noteName, notebookID), true, NoteContentFragment.TAG);
                 }
             });
         } else if (data.get(position) instanceof Notebook ){
@@ -80,7 +80,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainActivity.performFragmentTransaction(NotebookNotesFragment.newInstance(notebookName), true);
+                    mainActivity.performFragmentTransaction(NotebookNotesFragment.newInstance(notebookName), true, NoteContentFragment.TAG);
                 }
             });
         }

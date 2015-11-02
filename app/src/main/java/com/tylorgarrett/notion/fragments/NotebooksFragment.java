@@ -27,6 +27,8 @@ import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter
 
 public class NotebooksFragment extends Fragment implements OnUserSubscriptionsReadyListener{
 
+    public static String TAG = "NotebooksFragment";
+
     NotionData notionData;
     MainActivity mainActivity;
     private static NotebooksFragment notebooksFragment = null;

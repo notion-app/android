@@ -30,6 +30,8 @@ import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter
  */
 public class NotebookNotesFragment extends Fragment {
 
+    public static String TAG = "NotebookNotesFragment";
+
     MainActivity mainActivity;
 
     List notes;

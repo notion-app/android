@@ -138,4 +138,8 @@ public class NotionData {
     public void setSections(Map<Course, List<Section>> sections) {
         this.sections = sections;
     }
+
+    public void removeNotebook(Notebook nb){
+        notebooks.remove(nb);
+    }
 }

@@ -26,6 +26,8 @@ import butterknife.ButterKnife;
 
 public class NoteEditFragment extends Fragment implements TextWatcher {
 
+    public static String TAG = "NoteEditFragment";
+
     MainActivity mainActivity;
 
     NotionData notionData;
