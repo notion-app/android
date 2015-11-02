@@ -34,8 +34,12 @@ import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 import com.tylorgarrett.notion.fragments.NotebooksFragment;
 import com.tylorgarrett.notion.fragments.SettingsFragment;
+import com.tylorgarrett.notion.listeners.OnUserSubscriptionsReadyListener;
+import com.tylorgarrett.notion.models.Course;
 import com.tylorgarrett.notion.models.LoginBody;
+import com.tylorgarrett.notion.models.RetrofitResponse;
 import com.tylorgarrett.notion.models.School;
+import com.tylorgarrett.notion.models.SetSchool;
 import com.tylorgarrett.notion.models.User;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
@@ -62,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Bitmap profileImage;
     User currentUser;
 
-    String facebookUserName;
-
     @Bind(R.id.toolbar)
     public Toolbar toolbar;
 
@@ -89,47 +91,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navHeaderLayout.setOnClickListener(this);
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-            }
-        };
-
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         setSupportActionBar(toolbar);
 
         if ( !isLoggedIn() ){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            performFragmentTransaction(loginFragment, false);
+            performFragmentTransaction(loginFragment, false, LoginFragment.TAG);
         } else {
             userLoggedIn();
         }
+
     }
 
-    public void performFragmentTransaction(Fragment fragment, boolean addToBackStack){
+    public void performFragmentTransaction(Fragment fragment, boolean addToBackStack, String tag){
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, fragment);
+        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, fragment, tag);
         if ( addToBackStack ){
             ft.addToBackStack(null);
         }
         ft.commit();
     }
 
+    public Fragment findFragmentByTag(String tag){
+        FragmentManager fm = getSupportFragmentManager();
+        return fm.findFragmentByTag(tag);
+    }
+
     public void userLoggedIn(){
         getUserData();
-        if ( loginFragment != null ){
-            getSupportFragmentManager().beginTransaction().remove(loginFragment).commit();
-        }
-        performFragmentTransaction(NotebooksFragment.newInstance("Notebooks"), false);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void setUpNavHeader() throws IOException{
@@ -171,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+
     public void getUserData(){
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         Call<User> loginResponseCall = NotionService.getApi().login(new LoginBody("facebook", accessToken.getToken()));
@@ -178,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Response<User> response, Retrofit retrofit) {
                 currentUser = response.body();
+                getUserSubscriptions();
                 finishUserSetup();
             }
 
@@ -188,15 +181,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+
     public void finishUserSetup(){
+        getListOfSchools();
         try{
             setUpNavHeader();
         } catch (IOException e){
             e.printStackTrace();
         }
-        if ( currentUser.getSchool_id().equals("") ){
-            getListOfSchools();
-        }
+        getUserSubscriptions();
     }
 
     public void getListOfSchools(){
@@ -205,7 +198,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Response<List<School>> response, Retrofit retrofit) {
                 List<School> schools = response.body();
-                setSchoolDialog(schools);
+                NotionData.getInstance().setSchools(schools);
+                if (currentUser.getSchool_id().equals("")) {
+                    setSchoolDialog(schools);
+                }
             }
 
             @Override
@@ -244,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 if (found){
                     currentUser.setSchool_id(schoolId);
+                    setCurrentUserSchool(schoolId);
                 } else {
                     //ask to create a new request for adding a school.
                     Toast.makeText(getApplicationContext(), "Requested new School to be added", Toast.LENGTH_SHORT).show();
@@ -254,6 +251,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         schoolDialog.show();
     }
 
+    public void setCurrentUserSchool(String schoolId){
+        Call<RetrofitResponse> call = NotionService.getApi().setUserSchool(currentUser.getId(), currentUser.getFb_auth_token(), new SetSchool(schoolId));
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(Response<RetrofitResponse> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    public void getUserSubscriptions(){
+        Call<List<Notebook>> userSubs = NotionService.getApi().getUserSubscriptions(currentUser.getId(), currentUser.getFb_auth_token());
+        userSubs.enqueue(new Callback<List<Notebook>>() {
+            @Override
+            public void onResponse(Response<List<Notebook>> response, Retrofit retrofit) {
+                NotionData.getInstance().setNotebooks(response.body());
+                openMainFragment();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(MainActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void openMainFragment(){
+        if ( loginFragment != null ){
+            getSupportFragmentManager().beginTransaction().remove(loginFragment).commit();
+        }
+        performFragmentTransaction(NotebooksFragment.getInstance(), false, NotebooksFragment.TAG);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        drawerLayout.closeDrawer(Gravity.LEFT);
+    }
 
     public Bitmap getProfileImage() {
         return profileImage;
@@ -300,13 +336,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawerLayout.closeDrawer(Gravity.LEFT);
-        performFragmentTransaction(NotebooksFragment.newInstance(title), true);
+        performFragmentTransaction(NotebooksFragment.getInstance(), true, NotebooksFragment.TAG);
         return false;
     }
 
     @Override
     public void onClick(View v) {
-        performFragmentTransaction(SettingsFragment.newInstance(), true);
+        performFragmentTransaction(SettingsFragment.newInstance(), true, SettingsFragment.TAG);
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 }

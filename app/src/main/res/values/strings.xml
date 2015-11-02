@@ -7,6 +7,7 @@
     <string name="NotionNote">Note</string>
     <string name="NotionNotes">Notes</string>
     <string name="NotionNotebooks">Notebooks</string>
+    <string name="NotionProfile">Profile</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 
@@ -31,6 +32,23 @@
     <string name="notion_header">CS182 Discrete Math</string>
     <string name="notion_subheader">13 Notes</string>
 
-    <string name="profile_settings">Profile</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="settings_title">Settings</string>
+    <string name="user_settings">User</string>
+    <string name="notebook_settings">Notebook Settings</string>
+    <string name="notebook_edits">Add new notebooks, remove current notebooks, and change the names of current notebooks.</string>
+    <string name="note_settings">Note Settings</string>
+    <string name="note_edits">Delete current notes.</string>
+
+    <string name="select_course">Select Course</string>
+    <string name="select_section">Select Section</string>
+
+    <string name="add_subscription">Add New Notebook</string>
+    <string name="delete_notebook">Delete Notebook</string>
+
+    <string name="settings_content">Content</string>
     <string name="profile_school_label">School: </string>
+    <string name="profile_edits">Edit your profile settings including default school, name and profile picture.</string>
+
+    <string name="notebook_name">Notebook Name</string>
 </resources>

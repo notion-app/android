@@ -10,6 +10,7 @@ public class Notebook {
     private String id;
     private String user_id;
     private String notebook_id;
+    private String name;
 
     public Notebook(String id, String user_id, String notebook_id) {
         this.id = id;
@@ -45,11 +46,15 @@ public class Notebook {
         return null;
     }
 
-    public String getTitle(){
-        return "";
-    }
-
     public int getNoteCount(){
         return 1;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

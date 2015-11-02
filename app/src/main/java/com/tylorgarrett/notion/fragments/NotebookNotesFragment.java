@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
-import com.tylorgarrett.notion.adapters.MyAdapter;
+import com.tylorgarrett.notion.adapters.MainAdapter;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.models.Notebook;
 
@@ -22,7 +22,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 
@@ -30,6 +29,8 @@ import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter
  * A simple {@link Fragment} subclass.
  */
 public class NotebookNotesFragment extends Fragment {
+
+    public static String TAG = "NotebookNotesFragment";
 
     MainActivity mainActivity;
 
@@ -72,7 +73,7 @@ public class NotebookNotesFragment extends Fragment {
             mRecyclerView.setHasFixedSize(true);
             mLayoutManager = new GridLayoutManager(getActivity(), 2);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new MyAdapter(notes, (MainActivity) getActivity());
+            mAdapter = new MainAdapter(notes, (MainActivity) getActivity());
             SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
             AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
             adapter.setDuration(500);
@@ -86,7 +87,7 @@ public class NotebookNotesFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_main, menu);
-        mainActivity.toolbar.setTitle(notebook.getTitle());
+        mainActivity.toolbar.setTitle(notebook.getName());
         super.onCreateOptionsMenu(menu, inflater);
     }
 

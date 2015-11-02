@@ -28,9 +28,10 @@ import butterknife.OnClick;
  */
 public class LoginFragment extends Fragment {
 
+    public static String TAG = "LoginFragment";
+
     MainActivity activity;
     CallbackManager callbackManager;
-    public static String TAG = "LoginFragment";
 
     @Bind(R.id.login_button)
     LoginButton loginButton;

@@ -13,8 +13,9 @@ import android.view.ViewGroup;
 
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
-import com.tylorgarrett.notion.adapters.MyAdapter;
+import com.tylorgarrett.notion.adapters.MainAdapter;
 import com.tylorgarrett.notion.data.NotionData;
+import com.tylorgarrett.notion.listeners.OnUserSubscriptionsReadyListener;
 
 import java.util.List;
 
@@ -24,12 +25,14 @@ import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 
 
-public class NotebooksFragment extends Fragment {
+public class NotebooksFragment extends Fragment implements OnUserSubscriptionsReadyListener{
+
+    public static String TAG = "NotebooksFragment";
 
     NotionData notionData;
     MainActivity mainActivity;
+    private static NotebooksFragment notebooksFragment = null;
 
-    String title;
     List data;
 
     @Bind(R.id.notebooks_recyclerview)
@@ -40,12 +43,11 @@ public class NotebooksFragment extends Fragment {
     public RecyclerView.LayoutManager mLayoutManager;
 
 
-    public static NotebooksFragment newInstance(String title) {
-        NotebooksFragment fragment = new NotebooksFragment();
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        fragment.setArguments(args);
-        return fragment;
+    public static NotebooksFragment getInstance() {
+        if ( notebooksFragment == null ){
+            return new NotebooksFragment();
+        }
+        return notebooksFragment;
     }
 
     public NotebooksFragment() {}
@@ -56,7 +58,6 @@ public class NotebooksFragment extends Fragment {
         setHasOptionsMenu(true);
         mainActivity = (MainActivity) getActivity();
         notionData = NotionData.getInstance();
-        title = getArguments().getString("title");
         this.data = notionData.getNotebooks();
     }
 
@@ -67,7 +68,7 @@ public class NotebooksFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapter(data, (MainActivity) getActivity());
+        mAdapter = new MainAdapter(data, (MainActivity) getActivity());
         SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
         AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
         adapter.setDuration(500);
@@ -82,5 +83,20 @@ public class NotebooksFragment extends Fragment {
         inflater.inflate(R.menu.menu_main, menu);
         mainActivity.toolbar.setTitle(getResources().getString(R.string.app_name));
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onUserSubScriptionsReadyListener() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public RecyclerView.Adapter getAdapter() {
+        return mAdapter;
     }
 }

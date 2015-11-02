@@ -26,6 +26,8 @@ import in.uncod.android.bypass.Bypass;
  */
 public class NoteContentFragment extends Fragment {
 
+    public static String TAG = "NoteContentFragment";
+
     @Bind(R.id.note_content_textview)
     TextView contentView;
 
@@ -91,7 +93,7 @@ public class NoteContentFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_edit:
-                mainActivity.performFragmentTransaction(NoteEditFragment.newInstance(noteID, notebookID), true);
+                mainActivity.performFragmentTransaction(NoteEditFragment.newInstance(noteID, notebookID), true, NoteEditFragment.TAG);
                 break;
         }
         return super.onOptionsItemSelected(item);
