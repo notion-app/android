@@ -18,7 +18,7 @@ import com.tylorgarrett.notion.models.Notebook;
 
 import java.util.List;
 
-/**
+/*
  * Created by tylorgarrett on 10/27/15.
  */
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHolder> {
@@ -61,8 +61,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     public void notebookSettings(Object object, View v){
         TextView headerText = (TextView) v.findViewById(R.id.notion_settings_header_textview);
+        TextView subHeaderText = (TextView) v.findViewById(R.id.notion_settings_subheader_textview);
         final Notebook notebook = (Notebook) object;
         headerText.setText(notebook.getName());
+        subHeaderText.setText(notebook.getDescription());
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

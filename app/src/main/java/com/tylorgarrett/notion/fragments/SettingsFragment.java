@@ -1,28 +1,22 @@
 package com.tylorgarrett.notion.fragments;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsFragment extends Fragment{
 
@@ -57,7 +51,7 @@ public class SettingsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_profile_settings, container, false);
+        View v = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, v);
         return v;
     }

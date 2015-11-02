@@ -61,6 +61,9 @@ import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+
+    boolean debug = false;
+
     LoginFragment loginFragment;
     NotionData notionData;
     Bitmap profileImage;
@@ -91,15 +94,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navHeaderLayout.setOnClickListener(this);
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        setSupportActionBar(toolbar);
-
         if ( !isLoggedIn() ){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             performFragmentTransaction(loginFragment, false, LoginFragment.TAG);
         } else {
+            debugToast("User is logged in");
             userLoggedIn();
         }
 
@@ -172,11 +171,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 currentUser = response.body();
                 getUserSubscriptions();
                 finishUserSetup();
+                debugToast("Get User Data Success" + response.message());
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                debugToast("Get User Data Failure" + t.getMessage());
             }
         });
     }
@@ -202,11 +202,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (currentUser.getSchool_id().equals("")) {
                     setSchoolDialog(schools);
                 }
+                debugToast(response.message());
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                debugToast(t.getMessage());
             }
         });
     }
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     setCurrentUserSchool(schoolId);
                 } else {
                     //ask to create a new request for adding a school.
-                    Toast.makeText(getApplicationContext(), "Requested new School to be added", Toast.LENGTH_SHORT).show();
+                    debugToast("Request for a new School to be added");
                 }
             }
         });
@@ -256,12 +257,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Response<RetrofitResponse> response, Retrofit retrofit) {
-
+                debugToast("Set User School Success" + response.message());
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                debugToast("Set User School Failure" + t.getMessage());
             }
         });
     }
@@ -273,11 +274,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Response<List<Notebook>> response, Retrofit retrofit) {
                 NotionData.getInstance().setNotebooks(response.body());
                 openMainFragment();
+                debugToast("Get User Subscriptions Success: " + response.message());
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Toast.makeText(MainActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                debugToast("Get User Subscription Failure: " + t.getMessage());
             }
         });
     }
@@ -319,6 +321,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void setUpToolbar(){
         toolbar.setTitleTextColor(getResources().getColor(R.color.NotionYellow));
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        setSupportActionBar(toolbar);
     }
 
     public User getCurrentUser(){
@@ -344,5 +350,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onClick(View v) {
         performFragmentTransaction(SettingsFragment.newInstance(), true, SettingsFragment.TAG);
         drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+
+    public void debugToast(String message){
+        if ( debug ){
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+            Log.d("logger", message);
+        }
     }
 }
