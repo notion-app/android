@@ -1,6 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.tylorgarrett.notion.fragments.NotebooksFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -8,5 +10,15 @@
         android:scrollbars="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
+
+    <com.getbase.floatingactionbutton.AddFloatingActionButton
+        android:id="@+id/notebooks_floatingactionbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        fab:fab_plusIconColor="@color/NotionYellow"/>
 
 </RelativeLayout>

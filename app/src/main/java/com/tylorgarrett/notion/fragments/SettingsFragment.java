@@ -64,7 +64,7 @@ public class SettingsFragment extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @OnClick({R.id.settings_logout_cardview, R.id.setting_notebook_cardview})
+    @OnClick({R.id.settings_logout_cardview, R.id.setting_notebook_cardview, R.id.settings_profile_cardview})
     public void onClick(View v){
         if ( v.getId() == R.id.settings_logout_cardview ){
             LoginManager.getInstance().logOut();

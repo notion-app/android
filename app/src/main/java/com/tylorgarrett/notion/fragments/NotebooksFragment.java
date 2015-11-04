@@ -11,10 +11,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.adapters.MainAdapter;
 import com.tylorgarrett.notion.data.NotionData;
+import com.tylorgarrett.notion.dialogs.NewNotebookDialog;
 import com.tylorgarrett.notion.listeners.OnUserSubscriptionsReadyListener;
 
 import java.util.List;
@@ -31,12 +33,17 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
 
     NotionData notionData;
     MainActivity mainActivity;
+    SlideInBottomAnimationAdapter slideInBottomAnimationAdapter;
+    AlphaInAnimationAdapter adapter;
     private static NotebooksFragment notebooksFragment = null;
 
     List data;
 
     @Bind(R.id.notebooks_recyclerview)
     public RecyclerView mRecyclerView;
+
+    @Bind(R.id.notebooks_floatingactionbutton)
+    FloatingActionButton fab;
 
 
     public RecyclerView.Adapter mAdapter;
@@ -58,7 +65,7 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
         setHasOptionsMenu(true);
         mainActivity = (MainActivity) getActivity();
         notionData = NotionData.getInstance();
-        this.data = notionData.getNotebooks();
+        data = notionData.getNotebooks();
     }
 
     @Override
@@ -69,11 +76,18 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MainAdapter(data, (MainActivity) getActivity());
-        SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
-        AlphaInAnimationAdapter adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
+        slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
+        adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
         adapter.setDuration(500);
         adapter.setFirstOnly(true);
         mRecyclerView.setAdapter(adapter);
+        fab.setColorNormal(getResources().getColor(R.color.NotionDark));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new NewNotebookDialog(mainActivity.getCurrentUser(), mainActivity);
+            }
+        });
         return v;
     }
 
@@ -89,6 +103,11 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
     public void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateAdapter(){
+        adapter.notifyDataSetChanged();
+        mainActivity.debugToast("updated adapter");
     }
 
     @Override
