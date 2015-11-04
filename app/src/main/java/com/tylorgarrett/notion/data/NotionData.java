@@ -5,6 +5,7 @@ import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.School;
 import com.tylorgarrett.notion.models.Section;
+import com.tylorgarrett.notion.models.Topic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,6 +97,7 @@ public class NotionData {
         }
         return courseNames;
     }
+
     public List<String> getSectionNames(Course course){
         List<String> sectionNames = new ArrayList<String>();
         List<Section> listOfSections = sections.get(course);
@@ -114,6 +116,20 @@ public class NotionData {
         return null;
     }
 
+    public School getSchoolById(String schoolId){
+        for (School school : schools ){
+            if(school.getId().equals(schoolId)){
+                return school;
+            }
+        }
+        return null;
+    }
+
+    public void removeNotebook(Notebook nb){
+        if ( notebooks.contains(nb) ){
+            notebooks.remove(nb);
+        }
+    }
 
     public List<School> getSchools() {
         return schools;
@@ -137,11 +153,5 @@ public class NotionData {
 
     public void setSections(Map<Course, List<Section>> sections) {
         this.sections = sections;
-    }
-
-    public void removeNotebook(Notebook nb){
-        if ( notebooks.contains(nb) ){
-            notebooks.remove(nb);
-        }
     }
 }

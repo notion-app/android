@@ -81,6 +81,7 @@ public class NotebookSettingsDialog {
         call.enqueue(new Callback<Notebook>() {
             @Override
             public void onResponse(Response<Notebook> response, Retrofit retrofit) {
+                mainActivity.debugToast("Update Subscription Success " + response.message());
                 Notebook results = response.body();
                 notebook.setName(results.getName());
                 SubscriptionSettingsFragment f = (SubscriptionSettingsFragment) mainActivity.findFragmentByTag(SubscriptionSettingsFragment.TAG);
@@ -91,17 +92,18 @@ public class NotebookSettingsDialog {
 
             @Override
             public void onFailure(Throwable t) {
-
+                mainActivity.debugToast("Update Subscription Failure " + t.getMessage());
             }
         });
     }
 
     public void deleteSubscription(){
-        Call<Notebook> call = NotionService.getApi().deleteSubscription(mainActivity.getCurrentUser().getFb_auth_token(), mainActivity.getCurrentUser().getId(), new SubscriptionDeleteBody(notebook.getId()));
+        Call<Notebook> call = NotionService.getApi().deleteSubscription(mainActivity.getCurrentUser().getFb_auth_token(), mainActivity.getCurrentUser().getId(), notebook.getNotebook_id());
         call.enqueue(new Callback<Notebook>() {
             @Override
             public void onResponse(Response<Notebook> response, Retrofit retrofit) {
-                NotionData.getInstance().removeNotebook(response.body());
+                mainActivity.debugToast("Delete Subscription Success: " + response.message());
+                NotionData.getInstance().removeNotebook(notebook);
                 SubscriptionSettingsFragment f = (SubscriptionSettingsFragment) mainActivity.findFragmentByTag(SubscriptionSettingsFragment.TAG);
                 if ( f.mAdapter != null ){
                     f.updateAdapter();
@@ -110,7 +112,7 @@ public class NotebookSettingsDialog {
 
             @Override
             public void onFailure(Throwable t) {
-
+                mainActivity.debugToast("Delete Subscription Failure: " + t.getMessage());
             }
         });
     }

@@ -74,8 +74,8 @@ public class SettingsFragment extends Fragment{
             mainActivity.performFragmentTransaction(SubscriptionSettingsFragment.newInstance(), true, SubscriptionSettingsFragment.TAG);
         } else if (v.getId() == R.id.setting_note_cardview ){
 
-        } else {
-
+        } else if ( v.getId() == R.id.settings_profile_cardview ){
+            mainActivity.performFragmentTransaction(ProfileSettingsFragment.getInstance(), true, ProfileSettingsFragment.TAG);
         }
     }
 }
