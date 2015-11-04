@@ -19,6 +19,9 @@ import com.tylorgarrett.notion.adapters.MainAdapter;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.dialogs.NewNotebookDialog;
 import com.tylorgarrett.notion.listeners.OnUserSubscriptionsReadyListener;
+import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.Topic;
+import com.tylorgarrett.notion.services.NotionService;
 
 import java.util.List;
 
@@ -26,6 +29,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class NotebooksFragment extends Fragment implements OnUserSubscriptionsReadyListener{
@@ -118,6 +125,22 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
     @Override
     public void onUserSubScriptionsReadyListener() {
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void getUserNotes(final Notebook notebook){
+        Call<List<Topic>> call = NotionService.getApi().getUserNotebookNotes(mainActivity.getCurrentUser().getFb_auth_token(), true);
+        call.enqueue(new Callback<List<Topic>>() {
+            @Override
+            public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
+                notebook.setTopics(response.body());
+                mainActivity.debugToast("Get Notes Success: " + response.message());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                mainActivity.debugToast("Get Notes Failure: " + t.getMessage());
+            }
+        });
     }
 
     public void checkView(){

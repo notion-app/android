@@ -64,7 +64,8 @@ public class NoteContentFragment extends Fragment {
         noteID = getArguments().getString("noteID");
         notebookID = getArguments().getString("notebookID");
 
-        note = notionData.getNoteById(noteID, notebookID);
+        //note = notionData.getNoteById(noteID, notebookID);
+        note = new Note("", "", "", "", "", "", "");
 
         bypass = new Bypass();
 

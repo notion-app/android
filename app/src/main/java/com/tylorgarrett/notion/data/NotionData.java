@@ -45,31 +45,24 @@ public class NotionData {
         return notebooks;
     }
 
-    public List<Note> getNotes(){
-        for (Notebook notebook: notebooks){
-            notes.addAll(notebook.getNotes());
-        }
-        return notes;
-    }
-
     public Notebook getNotebookById(String id){
         for ( Notebook notebook : notebooks ){
-            if ( notebook.getName().equals(id) ){
+            if ( notebook.getNotebook_id().equals(id) ){
                 return notebook;
             }
         }
         return null;
     }
 
-    public Note getNoteById(String noteID, String notebookID){
-        Notebook notebook = getNotebookById(notebookID);
-        for (Note note: notebook.getNotes() ){
-            if ( note.getTitle().equals(noteID) ){
-                return note;
-            }
-        }
-        return null;
-    }
+//    public Note getNoteById(String noteID, String notebookID){
+//        Notebook notebook = getNotebookById(notebookID);
+//        for (Note note: notebook.getUserNotes() ){
+//            if ( note.getTitle().equals(noteID) ){
+//                return note;
+//            }
+//        }
+//        return null;
+//    }
 
     public void setNotebooks(List notebooks){
         this.notebooks = notebooks;

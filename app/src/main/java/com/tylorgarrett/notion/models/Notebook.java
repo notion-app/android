@@ -14,6 +14,8 @@ public class Notebook {
     private Course course;
     private Section section;
 
+    private List<Topic> topics;
+
     public Notebook(String id, String user_id, String notebook_id, Course course, Section section) {
         this.id = id;
         this.user_id = user_id;
@@ -46,10 +48,6 @@ public class Notebook {
         this.notebook_id = notebook_id;
     }
 
-    public List<Note> getNotes(){
-        return null;
-    }
-
     public int getNoteCount(){
         return 1;
     }
@@ -76,6 +74,14 @@ public class Notebook {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
     }
 
     public String getDescription(){
