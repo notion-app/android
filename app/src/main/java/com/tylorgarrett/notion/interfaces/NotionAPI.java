@@ -9,6 +9,7 @@ import com.tylorgarrett.notion.models.Section;
 import com.tylorgarrett.notion.models.SetSchool;
 import com.tylorgarrett.notion.models.SubscriptionBody;
 import com.tylorgarrett.notion.models.SubscriptionDeleteBody;
+import com.tylorgarrett.notion.models.Topic;
 import com.tylorgarrett.notion.models.User;
 
 import java.util.List;
@@ -50,7 +51,10 @@ public interface NotionAPI {
     @PUT("v1/user/{user_id}/subscription")
     Call<Notebook> changeSubscription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionBody body);
 
-    @DELETE("v1/user/{user_id}/subscription")
-    Call<Notebook> deleteSubscription(@Header("token") String token, @Path("user_id") String userId, @Body SubscriptionDeleteBody body);
+    @DELETE("v1/user/{user_id}/subscription/{notebook_id}")
+    Call<Notebook> deleteSubscription(@Header("token") String token, @Path("user_id") String userId, @Path("notebook_id") String notebookId);
+
+    @GET("v1/notebook/{notebook_id}/topic?user={user}&unjoined={unjoined}")
+    Call<List<Topic>> getNotebookNotes(@Header("token") String token, @Path("user") boolean user, @Path("unjoined") boolean unjoined);
 
 }

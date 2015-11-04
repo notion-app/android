@@ -136,11 +136,11 @@ public class NewNotebookDialog {
                 NotionData.getInstance().addNotebook(response.body());
                 SubscriptionSettingsFragment f = (SubscriptionSettingsFragment) mainActivity.findFragmentByTag(SubscriptionSettingsFragment.TAG);
                 NotebooksFragment f2 = (NotebooksFragment) mainActivity.findFragmentByTag(NotebooksFragment.TAG);
-                if ( f.mAdapter != null ){
+                if ( f != null ){
                     f.updateAdapter();
                 }
-                if ( f2.mAdapter != null ){
-                    f2.mAdapter.notifyDataSetChanged();
+                if ( f2 != null ){
+                    f2.updateAdapter();
                 }
                 mainActivity.debugToast("Add User Subscription Success " + response.message());
             }

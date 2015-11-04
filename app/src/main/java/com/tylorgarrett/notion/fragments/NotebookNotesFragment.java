@@ -40,8 +40,6 @@ public class NotebookNotesFragment extends Fragment {
 
     @Bind(R.id.notebooks_recyclerview)
     public RecyclerView mRecyclerView;
-
-
     public RecyclerView.Adapter mAdapter;
     public RecyclerView.LayoutManager mLayoutManager;
 

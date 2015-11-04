@@ -49,6 +49,7 @@
     <string name="settings_content">Content</string>
     <string name="profile_school_label">School: </string>
     <string name="profile_edits">View your profile settings including default school, name and profile picture.</string>
+    <string name="profile_image">Profile Image</string>
 
     <string name="notebook_name">Notebook Name</string>
 </resources>

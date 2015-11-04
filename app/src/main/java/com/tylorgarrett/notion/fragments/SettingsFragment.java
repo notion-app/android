@@ -64,7 +64,7 @@ public class SettingsFragment extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @OnClick({R.id.settings_logout_cardview, R.id.setting_notebook_cardview})
+    @OnClick({R.id.settings_logout_cardview, R.id.setting_notebook_cardview, R.id.settings_profile_cardview})
     public void onClick(View v){
         if ( v.getId() == R.id.settings_logout_cardview ){
             LoginManager.getInstance().logOut();
@@ -74,8 +74,8 @@ public class SettingsFragment extends Fragment{
             mainActivity.performFragmentTransaction(SubscriptionSettingsFragment.newInstance(), true, SubscriptionSettingsFragment.TAG);
         } else if (v.getId() == R.id.setting_note_cardview ){
 
-        } else {
-
+        } else if ( v.getId() == R.id.settings_profile_cardview ){
+            mainActivity.performFragmentTransaction(ProfileSettingsFragment.getInstance(), true, ProfileSettingsFragment.TAG);
         }
     }
 }

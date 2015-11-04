@@ -61,7 +61,6 @@ import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-
     boolean debug = false;
 
     LoginFragment loginFragment;
@@ -180,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
 
     public void finishUserSetup(){
         getListOfSchools();
@@ -355,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void debugToast(String message){
         if ( debug ){
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-            Log.d("logger", message);
         }
+        Log.d("logger", message);
     }
 }
