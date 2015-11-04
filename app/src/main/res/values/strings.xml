@@ -52,4 +52,5 @@
     <string name="profile_image">Profile Image</string>
 
     <string name="notebook_name">Notebook Name</string>
+    <string name="notebook_empty">Add notebooks using the button below!</string>
 </resources>

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.tylorgarrett.notion.MainActivity;
@@ -45,6 +46,8 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
     @Bind(R.id.notebooks_floatingactionbutton)
     FloatingActionButton fab;
 
+    @Bind(R.id.notebooks_textview)
+    TextView textView;
 
     public RecyclerView.Adapter mAdapter;
     public RecyclerView.LayoutManager mLayoutManager;
@@ -88,6 +91,7 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
                 new NewNotebookDialog(mainActivity.getCurrentUser(), mainActivity);
             }
         });
+        checkView();
         return v;
     }
 
@@ -108,6 +112,7 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
     public void updateAdapter(){
         adapter.notifyDataSetChanged();
         mainActivity.debugToast("updated adapter");
+        checkView();
     }
 
     @Override
@@ -115,7 +120,13 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
         mAdapter.notifyDataSetChanged();
     }
 
-    public RecyclerView.Adapter getAdapter() {
-        return mAdapter;
+    public void checkView(){
+        if ( adapter.getItemCount() == 0 ){
+            mRecyclerView.setVisibility(View.GONE);
+            textView.setText(getResources().getString(R.string.notebook_empty));
+        } else {
+            textView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }
