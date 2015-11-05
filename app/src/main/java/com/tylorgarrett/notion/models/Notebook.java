@@ -1,5 +1,7 @@
 package com.tylorgarrett.notion.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +16,17 @@ public class Notebook {
     private Course course;
     private Section section;
 
+    private List<Topic> topics;
+
+    private List<Note> notes;
+
     public Notebook(String id, String user_id, String notebook_id, Course course, Section section) {
         this.id = id;
         this.user_id = user_id;
         this.notebook_id = notebook_id;
         this.course = course;
         this.section = section;
+        this.notes = new ArrayList<Note>();
     }
 
     public String getId() {
@@ -44,10 +51,6 @@ public class Notebook {
 
     public void setNotebook_id(String notebook_id) {
         this.notebook_id = notebook_id;
-    }
-
-    public List<Note> getNotes(){
-        return null;
     }
 
     public int getNoteCount(){
@@ -76,6 +79,31 @@ public class Notebook {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
+    }
+
+    public List<Note> getNotes() {
+        notes = new ArrayList<>();
+        if ( topics == null ){
+            return notes;
+        }
+        for ( Topic topic : topics ){
+            for (Note n: topic.getNotes() ){
+                notes.add(n);
+            }
+        }
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 
     public String getDescription(){

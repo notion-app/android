@@ -22,6 +22,7 @@ import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /*
  * Created by tylorgarrett on 10/21/15.
@@ -54,7 +55,10 @@ public interface NotionAPI {
     @DELETE("v1/user/{user_id}/subscription/{notebook_id}")
     Call<Notebook> deleteSubscription(@Header("token") String token, @Path("user_id") String userId, @Path("notebook_id") String notebookId);
 
-    @GET("v1/notebook/{notebook_id}/topic?user={user}&unjoined={unjoined}")
-    Call<List<Topic>> getNotebookNotes(@Header("token") String token, @Path("user") boolean user, @Path("unjoined") boolean unjoined);
+    @GET("v1/notebook/{notebook_id}/topic")
+    Call<List<Topic>> getUserNotebookNotes(@Header("token") String token, @Path("notebook_id") String notebookId, @Query("user") boolean user);
+
+    @GET("v1/notebook/{notebook_id}/topic")
+    Call<List<Topic>> getUserUnjoinedNotebookNotes(@Header("token") String token, @Path("notebook_id") String notebookId, @Query("unjoined") boolean unjoined);
 
 }

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.tylorgarrett.notion.data.NotionData;
+import com.tylorgarrett.notion.dialogs.SetSchoolDialog;
 import com.tylorgarrett.notion.fragments.LoginFragment;
 import com.tylorgarrett.notion.fragments.NotebooksFragment;
 import com.tylorgarrett.notion.fragments.SettingsFragment;
@@ -160,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
     public void getUserData(){
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         Call<User> loginResponseCall = NotionService.getApi().login(new LoginBody("facebook", accessToken.getToken()));
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 List<School> schools = response.body();
                 NotionData.getInstance().setSchools(schools);
                 if (currentUser.getSchool_id().equals("")) {
-                    setSchoolDialog(schools);
+                    new SetSchoolDialog(getApplicationContext());
                 }
                 debugToast(response.message());
             }
@@ -206,61 +206,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Throwable t) {
                 debugToast(t.getMessage());
-            }
-        });
-    }
-
-    public void setSchoolDialog(final List<School> schools){
-        List<String> schoolName = new ArrayList<String>(schools.size());
-        for (School s: schools){
-            schoolName.add(s.getName());
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select A School");
-        View view = getLayoutInflater().inflate(R.layout.school_dialog_fragment, null);
-        final AutoCompleteTextView textView = (AutoCompleteTextView) view.findViewById(R.id.school_dialog_textview);
-        textView.setThreshold(2);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, schoolName);
-        textView.setAdapter(adapter);
-        builder.setView(view);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                boolean found = false;
-                String schoolId = "";
-                String schoolName = textView.getText().toString();
-                for(School s: schools){
-                    if ( s.getName().equals(schoolName) ){
-                        found = true;
-                        schoolId = s.getId();
-                        break;
-                    }
-                }
-                if (found){
-                    currentUser.setSchool_id(schoolId);
-                    setCurrentUserSchool(schoolId);
-                } else {
-                    //ask to create a new request for adding a school.
-                    debugToast("Request for a new School to be added");
-                }
-            }
-        });
-        AlertDialog schoolDialog = builder.create();
-        schoolDialog.show();
-    }
-
-    public void setCurrentUserSchool(String schoolId){
-        Call<RetrofitResponse> call = NotionService.getApi().setUserSchool(currentUser.getId(), currentUser.getFb_auth_token(), new SetSchool(schoolId));
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(Response<RetrofitResponse> response, Retrofit retrofit) {
-                debugToast("Set User School Success" + response.message());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                debugToast("Set User School Failure" + t.getMessage());
             }
         });
     }

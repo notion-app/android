@@ -1,6 +1,7 @@
 package com.tylorgarrett.notion.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.fragments.NoteContentFragment;
 import com.tylorgarrett.notion.fragments.NotebookNotesFragment;
+import com.tylorgarrett.notion.fragments.NotebooksFragment;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 
@@ -48,11 +50,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         TextView subHeaderText = (TextView) holder.v.findViewById((R.id.notion_subheader_textview));
         TextView editedText = (TextView) holder.v.findViewById(R.id.notion_edited_textview);
         ImageView imageView = (ImageView) holder.v.findViewById(R.id.notion_imageview);
-        Notebook notebook;
+        final Notebook notebook;
         Note note;
 
 
         if ( data.get(position) instanceof Note ){
+            Log.d("logger", "Instance of Note found");
             note = (Note) data.get(position);
             linearLayout.setBackgroundColor(mainActivity.getResources().getColor(R.color.NotionYellow));
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
@@ -76,11 +79,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             subHeaderText.setText(notebook.getNoteCount() + " Notes");
             imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.notebook));
             editedText.setText("Last Edited: 4 Hours Ago");
-            final String notebookName = notebook.getName();
+            final String notebookID = notebook.getNotebook_id();
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainActivity.performFragmentTransaction(NotebookNotesFragment.newInstance(notebookName), true, NoteContentFragment.TAG);
+                    mainActivity.performFragmentTransaction(NotebookNotesFragment.newInstance(notebookID), true, NotebookNotesFragment.TAG);
                 }
             });
         }
