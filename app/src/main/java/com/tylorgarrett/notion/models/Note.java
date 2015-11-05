@@ -11,8 +11,9 @@ public class Note {
     private String endorsements;
     private String created_at;
     private String updated_at;
+    private String topic_id;
 
-    public Note(String id, String title, String owner, String content, String endorsements, String created_at, String updated_at) {
+    public Note(String id, String title, String owner, String content, String endorsements, String created_at, String updated_at, String topic_id) {
         this.id = id;
         this.title = title;
         this.owner = owner;
@@ -20,6 +21,7 @@ public class Note {
         this.endorsements = endorsements;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.topic_id = topic_id;
     }
 
     public String getId() {
@@ -78,7 +80,11 @@ public class Note {
         this.updated_at = updated_at;
     }
 
-    public String getNotebookName(){
-        return "";
+    public String getTopic_id() {
+        return topic_id;
+    }
+
+    public void setTopic_id(String topic_id) {
+        this.topic_id = topic_id;
     }
 }

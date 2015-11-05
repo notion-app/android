@@ -16,6 +16,8 @@ import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.models.Note;
+import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.Topic;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,15 +42,15 @@ public class NoteContentFragment extends Fragment {
 
     String noteID;
     String notebookID;
+    Notebook notebook;
 
 
     public NoteContentFragment() {}
 
-    public static NoteContentFragment newInstance(String noteID, String notebookID){
+    public static NoteContentFragment newInstance(String noteID){
         NoteContentFragment f = new NoteContentFragment();
         Bundle args = new Bundle();
         args.putString("noteID", noteID);
-        args.putString("notebookID", notebookID);
         f.setArguments(args);
         return f;
     }
@@ -62,10 +64,11 @@ public class NoteContentFragment extends Fragment {
         notionData = NotionData.getInstance();
 
         noteID = getArguments().getString("noteID");
-        notebookID = getArguments().getString("notebookID");
 
-        //note = notionData.getNoteById(noteID, notebookID);
-        note = new Note("", "", "", "", "", "", "");
+        note = notionData.getNoteByNoteId(noteID);
+
+        notebook = notionData.getNotebookByNoteId(noteID);
+
 
         bypass = new Bypass();
 
@@ -76,7 +79,7 @@ public class NoteContentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_note_content, container, false);
         ButterKnife.bind(this, v);
-        CharSequence contentMD = bypass.markdownToSpannable(note.getContent().toString());
+        CharSequence contentMD = bypass.markdownToSpannable(note.getContent());
         contentView.setText(contentMD);
         contentView.setMovementMethod(LinkMovementMethod.getInstance());
         return v;
@@ -94,7 +97,7 @@ public class NoteContentFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_edit:
-                mainActivity.performFragmentTransaction(NoteEditFragment.newInstance(noteID, notebookID), true, NoteEditFragment.TAG);
+                mainActivity.performFragmentTransaction(NoteEditFragment.newInstance(note.getId(), notebook.getId()), true, NoteEditFragment.TAG);
                 break;
         }
         return super.onOptionsItemSelected(item);

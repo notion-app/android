@@ -130,6 +130,7 @@ public class NotebookNotesFragment extends Fragment {
             @Override
             public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
                 notebook.setTopics(response.body());
+                notebook.setNotes(notebook.getNotes());
                 updateAdapter();
                 mainActivity.debugToast("Get Notes Success: " + response.message());
             }

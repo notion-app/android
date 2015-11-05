@@ -54,7 +54,7 @@ public class Notebook {
     }
 
     public int getNoteCount(){
-        return 1;
+        return getNotes().size();
     }
 
     public String getName() {

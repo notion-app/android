@@ -57,18 +57,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         if ( data.get(position) instanceof Note ){
             Log.d("logger", "Instance of Note found");
             note = (Note) data.get(position);
+            final Note noteToBePassed = note;
             linearLayout.setBackgroundColor(mainActivity.getResources().getColor(R.color.NotionYellow));
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
             headerText.setText(note.getTitle());
-            subHeaderText.setText(note.getNotebookName());
             imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.note));
             editedText.setText("Last Edited: 4 Hours Ago");
-            final String noteName = note.getTitle();
-            final String notebookID = note.getNotebookName();
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainActivity.performFragmentTransaction(NoteContentFragment.newInstance(noteName, notebookID), true, NoteContentFragment.TAG);
+                    mainActivity.performFragmentTransaction(NoteContentFragment.newInstance(noteToBePassed.getId()), true, NoteContentFragment.TAG);
                 }
             });
         } else if (data.get(position) instanceof Notebook ){

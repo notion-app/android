@@ -2,6 +2,7 @@ package com.tylorgarrett.notion.interfaces;
 
 import com.tylorgarrett.notion.models.Course;
 import com.tylorgarrett.notion.models.LoginBody;
+import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.RetrofitResponse;
 import com.tylorgarrett.notion.models.School;
@@ -60,5 +61,8 @@ public interface NotionAPI {
 
     @GET("v1/notebook/{notebook_id}/topic")
     Call<List<Topic>> getUserUnjoinedNotebookNotes(@Header("token") String token, @Path("notebook_id") String notebookId, @Query("unjoined") boolean unjoined);
+
+    @GET("v1/notebook/{noteook_id}/note/{note_id}")
+    Call<Topic> getNote(@Header("token") String token, @Path("notebook_id") String notebookID, @Path("note_id") String noteId);
 
 }

@@ -45,6 +45,39 @@ public class NotionData {
         return notebooks;
     }
 
+    public Topic getTopicByID(String topicId){
+        for (Notebook notebook: notebooks){
+            for (Topic topic : notebook.getTopics() ){
+                if (topic.getId().equals(topicId)){
+                    return topic;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Note getNoteByNoteId(String noteId){
+        for (Notebook notebook : notebooks ){
+            for ( Note note : notebook.getNotes()){
+                if (note.getId().equals(noteId)){
+                    return note;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Notebook getNotebookByNoteId(String noteId){
+        for (Notebook notebook : notebooks ){
+            for (Note n: notebook.getNotes() ){
+                if (n.getId().equals(noteId)){
+                    return notebook;
+                }
+            }
+        }
+        return null;
+    }
+
     public Notebook getNotebookById(String id){
         for ( Notebook notebook : notebooks ){
             if ( notebook.getNotebook_id().equals(id) ){
