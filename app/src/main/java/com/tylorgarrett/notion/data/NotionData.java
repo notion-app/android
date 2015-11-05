@@ -58,13 +58,6 @@ public class NotionData {
         this.notebooks = notebooks;
     }
 
-    public void clearOut(){
-        notebooks = null;
-        notes = null;
-        notebooks = new ArrayList<Notebook>();
-        notes = new ArrayList<Note>();
-    }
-
     public List<String> getNotebookNames(){
         List<String> notebookNames = new ArrayList<String>(notebooks.size());
         for (Notebook n: notebooks){

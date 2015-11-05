@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
     public void getUserData(){
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         Call<User> loginResponseCall = NotionService.getApi().login(new LoginBody("facebook", accessToken.getToken()));

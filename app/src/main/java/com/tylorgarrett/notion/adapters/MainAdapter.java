@@ -1,6 +1,7 @@
 package com.tylorgarrett.notion.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
         if ( data.get(position) instanceof Note ){
+            Log.d("logger", "Instance of Note found");
             note = (Note) data.get(position);
             linearLayout.setBackgroundColor(mainActivity.getResources().getColor(R.color.NotionYellow));
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
@@ -81,8 +83,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    NotebooksFragment f = (NotebooksFragment) mainActivity.findFragmentByTag(NotebooksFragment.TAG);
-                    f.getUserNotes(notebook);
                     mainActivity.performFragmentTransaction(NotebookNotesFragment.newInstance(notebookID), true, NotebookNotesFragment.TAG);
                 }
             });

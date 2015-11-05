@@ -1,5 +1,7 @@
 package com.tylorgarrett.notion.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class Notebook {
         this.notebook_id = notebook_id;
         this.course = course;
         this.section = section;
+        this.notes = new ArrayList<Note>();
     }
 
     public String getId() {
@@ -86,20 +89,16 @@ public class Notebook {
         this.topics = topics;
     }
 
-    public void setUpNotes(){
-        notes = new ArrayList<Note>();
+    public List<Note> getNotes() {
+        notes = new ArrayList<>();
         if ( topics == null ){
-            return;
+            return notes;
         }
         for ( Topic topic : topics ){
             for (Note n: topic.getNotes() ){
                 notes.add(n);
             }
         }
-    }
-
-    public List<Note> getNotes() {
-        setUpNotes();
         return notes;
     }
 

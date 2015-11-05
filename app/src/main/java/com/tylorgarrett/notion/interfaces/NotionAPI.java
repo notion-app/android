@@ -56,9 +56,9 @@ public interface NotionAPI {
     Call<Notebook> deleteSubscription(@Header("token") String token, @Path("user_id") String userId, @Path("notebook_id") String notebookId);
 
     @GET("v1/notebook/{notebook_id}/topic")
-    Call<List<Topic>> getUserNotebookNotes(@Header("token") String token, @Query("user") boolean user);
+    Call<List<Topic>> getUserNotebookNotes(@Header("token") String token, @Path("notebook_id") String notebookId, @Query("user") boolean user);
 
     @GET("v1/notebook/{notebook_id}/topic")
-    Call<List<Topic>> getUserUnjoinedNotebookNotes(@Header("token") String token, @Query("unjoined") boolean unjoined);
+    Call<List<Topic>> getUserUnjoinedNotebookNotes(@Header("token") String token, @Path("notebook_id") String notebookId, @Query("unjoined") boolean unjoined);
 
 }

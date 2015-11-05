@@ -130,24 +130,6 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
         mAdapter.notifyDataSetChanged();
     }
 
-    public void getUserNotes(final Notebook notebook){
-        Call<List<Topic>> call = NotionService.getApi().getUserNotebookNotes(mainActivity.getCurrentUser().getFb_auth_token(), true);
-        call.enqueue(new Callback<List<Topic>>() {
-            @Override
-            public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
-                notebook.setTopics(response.body());
-                NotebookNotesFragment f = (NotebookNotesFragment) mainActivity.findFragmentByTag(NotebookNotesFragment.TAG);
-                f.updateAdapter();
-                mainActivity.debugToast("Get Notes Success: " + response.message());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                mainActivity.debugToast("Get Notes Failure: " + t.getMessage());
-            }
-        });
-    }
-
 
     public void checkView(){
         if ( adapter.getItemCount() == 0 ){

@@ -14,12 +14,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.adapters.MainAdapter;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.dialogs.NewNotebookDialog;
 import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.Topic;
+import com.tylorgarrett.notion.services.NotionService;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /*
  * A simple {@link Fragment} subclass.
@@ -70,7 +79,9 @@ public class NotebookNotesFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         String id = getArguments().getString("id");
         notebook = NotionData.getInstance().getNotebookById(id);
+        mainActivity.debugToast("notebook description: " + notebook.getDescription());
         notes = notebook.getNotes();
+        getUserNotes(notebook);
     }
 
     @Override
@@ -111,5 +122,22 @@ public class NotebookNotesFragment extends Fragment {
 
     public void updateAdapter(){
         adapter.notifyDataSetChanged();
+    }
+
+    public void getUserNotes(final Notebook notebook){
+        Call<List<Topic>> call = NotionService.getApi().getUserNotebookNotes(mainActivity.getCurrentUser().getFb_auth_token(), notebook.getNotebook_id(), true);
+        call.enqueue(new Callback<List<Topic>>() {
+            @Override
+            public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
+                notebook.setTopics(response.body());
+                updateAdapter();
+                mainActivity.debugToast("Get Notes Success: " + response.message());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                mainActivity.debugToast("Get Notes Failure: " + t.getMessage());
+            }
+        });
     }
 }
