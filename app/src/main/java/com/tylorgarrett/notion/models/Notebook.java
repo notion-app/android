@@ -16,6 +16,8 @@ public class Notebook {
 
     private List<Topic> topics;
 
+    private List<Note> notes;
+
     public Notebook(String id, String user_id, String notebook_id, Course course, Section section) {
         this.id = id;
         this.user_id = user_id;
@@ -82,6 +84,27 @@ public class Notebook {
 
     public void setTopics(List<Topic> topics) {
         this.topics = topics;
+    }
+
+    public void setUpNotes(){
+        notes = new ArrayList<Note>();
+        if ( topics == null ){
+            return;
+        }
+        for ( Topic topic : topics ){
+            for (Note n: topic.getNotes() ){
+                notes.add(n);
+            }
+        }
+    }
+
+    public List<Note> getNotes() {
+        setUpNotes();
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 
     public String getDescription(){

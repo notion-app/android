@@ -21,6 +21,7 @@ import com.tylorgarrett.notion.dialogs.NewNotebookDialog;
 import com.tylorgarrett.notion.listeners.OnUserSubscriptionsReadyListener;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.Topic;
+import com.tylorgarrett.notion.models.User;
 import com.tylorgarrett.notion.services.NotionService;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
     MainActivity mainActivity;
     SlideInBottomAnimationAdapter slideInBottomAnimationAdapter;
     AlphaInAnimationAdapter adapter;
+    User currentUser;
     private static NotebooksFragment notebooksFragment = null;
 
     List data;
@@ -76,6 +78,7 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
         mainActivity = (MainActivity) getActivity();
         notionData = NotionData.getInstance();
         data = notionData.getNotebooks();
+        currentUser = mainActivity.getCurrentUser();
     }
 
     @Override
@@ -133,6 +136,8 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
             @Override
             public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
                 notebook.setTopics(response.body());
+                NotebookNotesFragment f = (NotebookNotesFragment) mainActivity.findFragmentByTag(NotebookNotesFragment.TAG);
+                f.updateAdapter();
                 mainActivity.debugToast("Get Notes Success: " + response.message());
             }
 
@@ -142,6 +147,7 @@ public class NotebooksFragment extends Fragment implements OnUserSubscriptionsRe
             }
         });
     }
+
 
     public void checkView(){
         if ( adapter.getItemCount() == 0 ){

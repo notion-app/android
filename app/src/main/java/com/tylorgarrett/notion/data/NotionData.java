@@ -54,16 +54,6 @@ public class NotionData {
         return null;
     }
 
-//    public Note getNoteById(String noteID, String notebookID){
-//        Notebook notebook = getNotebookById(notebookID);
-//        for (Note note: notebook.getUserNotes() ){
-//            if ( note.getTitle().equals(noteID) ){
-//                return note;
-//            }
-//        }
-//        return null;
-//    }
-
     public void setNotebooks(List notebooks){
         this.notebooks = notebooks;
     }

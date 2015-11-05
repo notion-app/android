@@ -38,7 +38,7 @@ public class NotebookNotesFragment extends Fragment {
 
     MainActivity mainActivity;
 
-    List topics;
+    List notes;
 
     Notebook notebook;
 
@@ -70,7 +70,7 @@ public class NotebookNotesFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         String id = getArguments().getString("id");
         notebook = NotionData.getInstance().getNotebookById(id);
-        topics = new ArrayList();
+        notes = notebook.getNotes();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class NotebookNotesFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MainAdapter(topics, (MainActivity) getActivity());
+        mAdapter = new MainAdapter(notes, (MainActivity) getActivity());
         slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
         adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
         adapter.setDuration(500);
