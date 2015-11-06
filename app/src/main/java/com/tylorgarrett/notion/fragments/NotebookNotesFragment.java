@@ -19,6 +19,7 @@ import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.adapters.MainAdapter;
 import com.tylorgarrett.notion.data.NotionData;
+import com.tylorgarrett.notion.dialogs.NewNoteDialog;
 import com.tylorgarrett.notion.dialogs.NewNotebookDialog;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.Topic;
@@ -101,7 +102,7 @@ public class NotebookNotesFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                new NewNoteDialog(mainActivity);
             }
         });
         return v;

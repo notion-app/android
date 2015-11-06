@@ -65,4 +65,7 @@ public interface NotionAPI {
     @GET("v1/notebook/{noteook_id}/note/{note_id}")
     Call<Topic> getNote(@Header("token") String token, @Path("notebook_id") String notebookID, @Path("note_id") String noteId);
 
+    @POST("v1/notebook/{notebook_id}/note")
+    Call<Topic> createNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Body CreateNoteBody body);
+
 }
