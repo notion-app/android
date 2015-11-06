@@ -58,9 +58,8 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
         mainActivity = (MainActivity) getActivity();
         notionData = NotionData.getInstance();
         noteID = getArguments().getString("noteID");
-        notebookID = getArguments().getString("notebookID");
-        //note = notionData.getNoteById(noteID, notebookID);
-        //note = new Note("", "", "", "", "", "", "");
+
+        note = notionData.getNoteByNoteId(noteID);
     }
 
     @Override
@@ -105,6 +104,6 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        note.setContent("");
+        note.setContent(s.toString());
     }
 }

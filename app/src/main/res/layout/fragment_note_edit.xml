@@ -5,7 +5,10 @@
 
     <EditText
         android:id="@+id/note_edit_edittext"
+        android:inputType="textMultiLine"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:gravity="top|start"
+        android:hint="@string/note_content_hint"/>
 
 </RelativeLayout>

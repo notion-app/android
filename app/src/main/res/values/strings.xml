@@ -53,4 +53,6 @@
 
     <string name="notebook_name">Notebook Name</string>
     <string name="notebook_empty">Add notebooks using the button below!</string>
+
+    <string name="note_content_hint">Add your note content here</string>
 </resources>
