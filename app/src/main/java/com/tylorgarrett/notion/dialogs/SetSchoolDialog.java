@@ -33,8 +33,8 @@ public class SetSchoolDialog {
     User currentUser;
     NotionData notionData;
 
-    public SetSchoolDialog(Context context) {
-        this.mainActivity = (MainActivity) context;
+    public SetSchoolDialog(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         this.currentUser = mainActivity.getCurrentUser();
         this.notionData = NotionData.getInstance();
         setSchoolDialog(notionData.getSchools());

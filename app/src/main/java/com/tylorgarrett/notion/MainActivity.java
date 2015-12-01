@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 List<School> schools = response.body();
                 NotionData.getInstance().setSchools(schools);
                 if (currentUser.getSchool_id().equals("")) {
-                    new SetSchoolDialog(getApplicationContext());
+                    new SetSchoolDialog(MainActivity.this);
                 }
                 debugToast(response.message());
             }

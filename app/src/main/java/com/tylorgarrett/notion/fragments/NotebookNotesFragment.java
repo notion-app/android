@@ -102,7 +102,7 @@ public class NotebookNotesFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new NewNoteDialog(mainActivity);
+                new NewNoteDialog(mainActivity, notebook, notes);
             }
         });
         return v;

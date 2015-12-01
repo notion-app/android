@@ -1,6 +1,7 @@
 package com.tylorgarrett.notion.interfaces;
 
 import com.tylorgarrett.notion.models.Course;
+import com.tylorgarrett.notion.models.CreateNoteBody;
 import com.tylorgarrett.notion.models.LoginBody;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
@@ -67,5 +68,7 @@ public interface NotionAPI {
 
     @POST("v1/notebook/{notebook_id}/note")
     Call<Topic> createNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Body CreateNoteBody body);
+
+
 
 }
