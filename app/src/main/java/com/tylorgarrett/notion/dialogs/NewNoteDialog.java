@@ -35,6 +35,7 @@ public class NewNoteDialog {
     MainActivity mainActivity;
     Notebook notebook;
     List<Note> notes;
+    List<Topic> joinableNotes;
 
     public NewNoteDialog(MainActivity mainActivity, Notebook notebook, List<Note> notes) {
         this.mainActivity = mainActivity;
@@ -72,7 +73,7 @@ public class NewNoteDialog {
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                createNewNote(editText.getText().toString());
+                createNewNote(editText.getText().toString(), null);
             }
         });
         builder.create().show();
@@ -85,19 +86,23 @@ public class NewNoteDialog {
         builder.setTitle("Join Note");
         builder.setView(v);
         final Spinner spinner = (Spinner) v.findViewById(R.id.join_note_spinner);
+        final EditText editText = (EditText) v.findViewById(R.id.join_note_edittext);
         ArrayAdapter<String> noteNames = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1, data);
         spinner.setAdapter(noteNames);
         builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                joinNote();
+                int position = spinner.getSelectedItemPosition();
+                String title = editText.getText().toString();
+                Topic topic = getTopicFromPosition(position);
+                joinNote(title, topic);
             }
         });
         builder.create().show();
     }
 
-    public void createNewNote(String noteName) {
-        Call<Topic> call = NotionService.getApi().createNote(mainActivity.getCurrentUser().getFb_auth_token(), notebook.getNotebook_id(), new CreateNoteBody(noteName, null));
+    public void createNewNote(String noteName, String topicID) {
+        Call<Topic> call = NotionService.getApi().createNote(mainActivity.getCurrentUser().getFb_auth_token(), notebook.getNotebook_id(), new CreateNoteBody(noteName, topicID));
         call.enqueue(new Callback<Topic>() {
             @Override
             public void onResponse(Response<Topic> response, Retrofit retrofit) {
@@ -117,8 +122,8 @@ public class NewNoteDialog {
         });
     }
 
-    public void joinNote(){
-
+    public void joinNote(String name, Topic topic){
+        createNewNote(name, topic.getId());
     }
 
     public void getNotesToJoin(){
@@ -128,10 +133,10 @@ public class NewNoteDialog {
             public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
                 mainActivity.debugToast("Get Notes To Join Success: " + response.message());
                 //from joinable notes, get the names of Notes that you can join
-                List<Topic> joinableNotes = response.body();
+                setJoinableNotes(response.body());
                 List<String> namesOfNotes = new ArrayList<String>();
                 // for each topic, get the name of the notes
-                for (Topic t: joinableNotes ){
+                for (Topic t: getJoinableNotes() ){
                     for (Note n: t.getNotes()){
                         namesOfNotes.add(n.getTitle());
                     }
@@ -144,5 +149,17 @@ public class NewNoteDialog {
                 mainActivity.debugToast("Get Notes To Join Failure: " + t.getMessage());
             }
         });
+    }
+
+    public Topic getTopicFromPosition(int position){
+        return getJoinableNotes().get(position);
+    }
+
+    public List<Topic> getJoinableNotes() {
+        return joinableNotes;
+    }
+
+    public void setJoinableNotes(List<Topic> joinableNotes) {
+        this.joinableNotes = joinableNotes;
     }
 }
