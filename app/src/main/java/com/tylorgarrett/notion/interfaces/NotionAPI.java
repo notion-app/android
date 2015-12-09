@@ -69,6 +69,9 @@ public interface NotionAPI {
     @POST("v1/notebook/{notebook_id}/note")
     Call<Topic> createNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Body CreateNoteBody body);
 
+    @PUT("v1/notebook/{notebook_id}/note/{note_id}")
+    Call<Topic> updateNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Path("note_id") String noteId, @Body Topic topic);
+
 
 
 }

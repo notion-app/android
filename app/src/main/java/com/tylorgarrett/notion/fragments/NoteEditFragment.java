@@ -20,9 +20,16 @@ import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.models.Note;
+import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.Topic;
+import com.tylorgarrett.notion.services.NotionService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class NoteEditFragment extends Fragment implements TextWatcher {
 
@@ -39,6 +46,8 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
 
     String notebookID;
     String noteID;
+
+    Topic topic;
 
     public static NoteEditFragment newInstance(String noteID, String notebookID) {
         NoteEditFragment fragment = new NoteEditFragment();
@@ -58,8 +67,9 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
         mainActivity = (MainActivity) getActivity();
         notionData = NotionData.getInstance();
         noteID = getArguments().getString("noteID");
-
+        notebookID = NotionData.getInstance().getNotebookByNoteId(noteID).getId();
         note = notionData.getNoteByNoteId(noteID);
+        topic = notionData.getTopicByID(note.getTopic_id());
     }
 
     @Override
@@ -78,6 +88,7 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
             case R.id.action_save:
                 InputMethodManager imm = (InputMethodManager)mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mainActivity.getCurrentFocus().getWindowToken(), 0);
+                updateNote();
                 mainActivity.onBackPressed();
                 break;
         }
@@ -105,5 +116,21 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         note.setContent(s.toString());
+    }
+
+    public void updateNote(){
+        Call<Topic> updateNoteCall = NotionService.getApi().updateNote(mainActivity.getCurrentUser().getFb_auth_token(), notebookID , note.getId(), topic);
+        updateNoteCall.enqueue(new Callback<Topic>() {
+            @Override
+            public void onResponse(Response<Topic> response, Retrofit retrofit) {
+                mainActivity.debugToast("Success on updateNote " + response.raw());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                mainActivity.debugToast("Failure on UpdateNote " + t.getMessage());
+            }
+        });
+
     }
 }

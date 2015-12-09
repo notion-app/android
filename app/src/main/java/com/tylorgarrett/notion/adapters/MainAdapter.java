@@ -62,7 +62,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
             headerText.setText(note.getTitle());
             imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.note));
-            editedText.setText("Last Edited: 4 Hours Ago");
+            editedText.setText("Last Edited: " + note.getUpdated_at());
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,7 +76,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             headerText.setText(notebook.getName());
             subHeaderText.setText(notebook.getNoteCount() + " Notes");
             imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.notebook));
-            editedText.setText("Last Edited: 4 Hours Ago");
+            editedText.setText("");
             final String notebookID = notebook.getNotebook_id();
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
