@@ -22,7 +22,15 @@ import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.Topic;
+import com.tylorgarrett.notion.models.UpdateNoteBody;
 import com.tylorgarrett.notion.services.NotionService;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,14 +47,14 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
 
     NotionData notionData;
 
+    WebSocketClient socket;
+
     @Bind(R.id.note_edit_edittext)
     EditText noteContent;
 
     Note note;
-
     String notebookID;
     String noteID;
-
     Topic topic;
 
     public static NoteEditFragment newInstance(String noteID, String notebookID) {
@@ -70,7 +78,10 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
         notebookID = NotionData.getInstance().getNotebookByNoteId(noteID).getId();
         note = notionData.getNoteByNoteId(noteID);
         topic = notionData.getTopicByID(note.getTopic_id());
+        connectToWebSocket();
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,7 +130,7 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
     }
 
     public void updateNote(){
-        Call<Topic> updateNoteCall = NotionService.getApi().updateNote(mainActivity.getCurrentUser().getFb_auth_token(), notebookID , note.getId(), topic);
+        Call<Topic> updateNoteCall = NotionService.getApi().updateNote(mainActivity.getCurrentUser().getFb_auth_token(), notebookID , note.getId(), new UpdateNoteBody(note.getContent()));
         updateNoteCall.enqueue(new Callback<Topic>() {
             @Override
             public void onResponse(Response<Topic> response, Retrofit retrofit) {
@@ -131,6 +142,51 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
                 mainActivity.debugToast("Failure on UpdateNote " + t.getMessage());
             }
         });
+    }
 
+    public void connectToWebSocket(){
+        URI uri;
+        try {
+            uri = new URI("ws://notion-api-dev.herokuapp.com:80/v1/note/" + noteID + "/ws?token=" + mainActivity.getCurrentUser().getFb_auth_token());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        socket = new WebSocketClient(uri, new Draft_17()) {
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                mainActivity.debugToast("Web Socket Connected: " + handshakedata.getHttpStatusMessage());
+            }
+
+            @Override
+            public void onMessage(String message) {
+                mainActivity.debugToast("Web Socket Incoming Message: " + message);
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+                mainActivity.debugToast("Web Socket Closed: " + reason);
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                mainActivity.debugToast("Web Socket Connected: " + ex.getMessage());
+            }
+        };
+        socket.connect();
+        keepAlive(socket);
+    }
+
+    public void keepAlive(WebSocketClient socket){
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if ( socket != null ){
+            socket.close();
+        }
     }
 }

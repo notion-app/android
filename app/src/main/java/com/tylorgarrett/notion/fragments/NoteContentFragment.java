@@ -60,19 +60,11 @@ public class NoteContentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mainActivity = (MainActivity) getActivity();
-
         notionData = NotionData.getInstance();
-
         noteID = getArguments().getString("noteID");
-
         note = notionData.getNoteByNoteId(noteID);
-
         notebook = notionData.getNotebookByNoteId(noteID);
-
-
         bypass = new Bypass();
-
-
     }
 
     @Override

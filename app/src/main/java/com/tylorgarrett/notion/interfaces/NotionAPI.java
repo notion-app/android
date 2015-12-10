@@ -12,6 +12,7 @@ import com.tylorgarrett.notion.models.SetSchool;
 import com.tylorgarrett.notion.models.SubscriptionBody;
 import com.tylorgarrett.notion.models.SubscriptionDeleteBody;
 import com.tylorgarrett.notion.models.Topic;
+import com.tylorgarrett.notion.models.UpdateNoteBody;
 import com.tylorgarrett.notion.models.User;
 
 import java.util.List;
@@ -70,7 +71,7 @@ public interface NotionAPI {
     Call<Topic> createNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Body CreateNoteBody body);
 
     @PUT("v1/notebook/{notebook_id}/note/{note_id}")
-    Call<Topic> updateNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Path("note_id") String noteId, @Body Topic topic);
+    Call<Topic> updateNote(@Header("token") String token, @Path("notebook_id") String notebookId, @Path("note_id") String noteId, @Body UpdateNoteBody updateNoteBody);
 
 
 

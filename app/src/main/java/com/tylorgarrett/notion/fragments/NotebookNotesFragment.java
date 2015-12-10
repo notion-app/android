@@ -49,6 +49,8 @@ public class NotebookNotesFragment extends Fragment {
     MainActivity mainActivity;
 
     List notes;
+    List data;
+    String id;
 
     Notebook notebook;
 
@@ -78,10 +80,10 @@ public class NotebookNotesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mainActivity = (MainActivity) getActivity();
-        String id = getArguments().getString("id");
+        id = getArguments().getString("id");
         notebook = NotionData.getInstance().getNotebookById(id);
-        mainActivity.debugToast("notebook description: " + notebook.getDescription());
-        notes = notebook.getNotes();
+        setNotes(NotionData.getInstance().getNotebookById(id).getNotes());
+        data = getNotes();
         getUserNotes(notebook);
     }
 
@@ -92,7 +94,7 @@ public class NotebookNotesFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MainAdapter(notes, (MainActivity) getActivity());
+        mAdapter = new MainAdapter(data, (MainActivity) getActivity());
         slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
         adapter = new AlphaInAnimationAdapter(slideInBottomAnimationAdapter);
         adapter.setDuration(500);
@@ -122,6 +124,8 @@ public class NotebookNotesFragment extends Fragment {
     }
 
     public void updateAdapter(){
+        mainActivity.debugToast("Updated Adapter");
+        setNotes(NotionData.getInstance().getNotebookById(id).getNotes());
         adapter.notifyDataSetChanged();
     }
 
@@ -131,7 +135,6 @@ public class NotebookNotesFragment extends Fragment {
             @Override
             public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
                 notebook.setTopics(response.body());
-                notebook.setNotes(notebook.getNotes());
                 updateAdapter();
                 mainActivity.debugToast("Get Notes Success: " + response.message());
             }
@@ -141,5 +144,13 @@ public class NotebookNotesFragment extends Fragment {
                 mainActivity.debugToast("Get Notes Failure: " + t.getMessage());
             }
         });
+    }
+
+    public List getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List notes) {
+        this.notes = notes;
     }
 }
