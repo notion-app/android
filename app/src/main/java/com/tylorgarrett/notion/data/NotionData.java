@@ -30,6 +30,7 @@ public class NotionData {
         notebooks = new ArrayList<Notebook>();
         notes = new ArrayList<Note>();
         sections = new HashMap<Course, List<Section>>();
+        recommendationList = new ArrayList<>();
     }
 
     public static NotionData getInstance(){

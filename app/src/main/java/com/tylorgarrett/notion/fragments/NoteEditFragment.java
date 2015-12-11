@@ -16,12 +16,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.gson.JsonObject;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.data.NotionData;
 import com.tylorgarrett.notion.dialogs.RecommendationsDialogFragment;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.Ping;
+import com.tylorgarrett.notion.models.Recommendation;
 import com.tylorgarrett.notion.models.Topic;
 import com.tylorgarrett.notion.models.UpdateNoteBody;
 import com.tylorgarrett.notion.models.WebSocketRequestBody;
@@ -30,6 +33,7 @@ import com.tylorgarrett.notion.services.NotionService;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -108,7 +112,7 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
                 mainActivity.onBackPressed();
                 break;
             case R.id.recommendation_icon:
-                new RecommendationsDialogFragment(mainActivity);
+                new RecommendationsDialogFragment(mainActivity, NotionData.getInstance().getRecommendationList(), note);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -135,6 +139,10 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         note.setContent(s.toString());
+    }
+
+    public void updateNoteContent(String s){
+        noteContent.append(s);
     }
 
     public void updateNote(){
@@ -166,12 +174,23 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
             public void onOpen(ServerHandshake handshakedata) {
                 mainActivity.debugToast("Web Socket Connected: " + handshakedata.getHttpStatusMessage());
                 socketOpen = true;
-                keepAlive(socket);
+                socket.send(new Ping("ping").toString());
+                //keepAlive(socket);
             }
 
             @Override
             public void onMessage(String message) {
                 mainActivity.debugToast("Web Socket Incoming Message: " + message);
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(message);
+                    Recommendation newRecommendation = new Recommendation(jsonObject.getString("id"), jsonObject.getString("text"), jsonObject.getString("genesis"));
+                    mainActivity.debugToast("Web Socket Incoming Message: " + newRecommendation.toString());
+                    NotionData.getInstance().getRecommendationList().add(newRecommendation);
+                    //change the menu icon color
+                } catch (Exception e){
+                    mainActivity.debugToast("Web Socket Incoming Message: " + e.getMessage());
+                }
             }
 
             @Override
@@ -195,11 +214,11 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
             public void run() {
                 try {
                     while (isSocketOpen()) {
-                        socket.send("1");
-                        Thread.sleep(20000);
+                        socket.send(new Ping("ping").toString());
+                        Thread.sleep(30000);
                     }
                 } catch (Exception e) {
-                    //yes, do nothing
+                    e.getMessage();
                 }
             }
 

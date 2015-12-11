@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
+import com.tylorgarrett.notion.dialogs.RecommendationsDialogFragment;
+import com.tylorgarrett.notion.fragments.NoteEditFragment;
+import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Recommendation;
 
 import java.util.List;
@@ -17,8 +20,9 @@ import java.util.List;
  */
 public class RecommendationsAdapter extends RecyclerView.Adapter<RecommendationsAdapter.ViewHolder> {
 
-    MainActivity mainActivity;
     List<Recommendation> recommendationList;
+    final Note note;
+    MainActivity mainActivity;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,8 +33,18 @@ public class RecommendationsAdapter extends RecyclerView.Adapter<Recommendations
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        TextView tv = (TextView) holder.v.findViewById(R.id.recommendation_item_textview);
+        final TextView tv = (TextView) holder.v.findViewById(R.id.recommendation_item_textview);
         tv.setText(recommendationList.get(position).getText());
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NoteEditFragment f = (NoteEditFragment) mainActivity.findFragmentByTag(NoteEditFragment.TAG);
+                if ( f != null ){
+                    f.updateNoteContent("\n" + tv.getText().toString());
+                }
+                RecommendationsDialogFragment.closeDialog();
+            }
+        });
     }
 
     @Override
@@ -44,5 +58,11 @@ public class RecommendationsAdapter extends RecyclerView.Adapter<Recommendations
             super(view);
             v = view;
         }
+    }
+
+    public RecommendationsAdapter(List<Recommendation> recommendationList, Note note, MainActivity mainActivity) {
+        this.note = note;
+        this.recommendationList = recommendationList;
+        this.mainActivity = mainActivity;
     }
 }
