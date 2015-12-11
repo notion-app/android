@@ -19,10 +19,12 @@ import android.widget.EditText;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.data.NotionData;
+import com.tylorgarrett.notion.dialogs.RecommendationsDialogFragment;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 import com.tylorgarrett.notion.models.Topic;
 import com.tylorgarrett.notion.models.UpdateNoteBody;
+import com.tylorgarrett.notion.models.WebSocketRequestBody;
 import com.tylorgarrett.notion.services.NotionService;
 
 import org.java_websocket.client.WebSocketClient;
@@ -31,6 +33,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Timer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,6 +59,8 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
     String notebookID;
     String noteID;
     Topic topic;
+
+    boolean socketOpen = false;
 
     public static NoteEditFragment newInstance(String noteID, String notebookID) {
         NoteEditFragment fragment = new NoteEditFragment();
@@ -101,6 +106,9 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
                 imm.hideSoftInputFromWindow(mainActivity.getCurrentFocus().getWindowToken(), 0);
                 updateNote();
                 mainActivity.onBackPressed();
+                break;
+            case R.id.recommendation_icon:
+                new RecommendationsDialogFragment(mainActivity);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -157,6 +165,8 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
                 mainActivity.debugToast("Web Socket Connected: " + handshakedata.getHttpStatusMessage());
+                socketOpen = true;
+                keepAlive(socket);
             }
 
             @Override
@@ -167,19 +177,37 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
             @Override
             public void onClose(int code, String reason, boolean remote) {
                 mainActivity.debugToast("Web Socket Closed: " + reason);
+                socketOpen = false;
             }
 
             @Override
             public void onError(Exception ex) {
                 mainActivity.debugToast("Web Socket Connected: " + ex.getMessage());
+                socketOpen = false;
             }
         };
         socket.connect();
-        keepAlive(socket);
     }
 
-    public void keepAlive(WebSocketClient socket){
+    public void keepAlive(final WebSocketClient socket){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (isSocketOpen()) {
+                        socket.send("1");
+                        Thread.sleep(20000);
+                    }
+                } catch (Exception e) {
+                    //yes, do nothing
+                }
+            }
 
+        }).start();
+    }
+
+    public boolean isSocketOpen(){
+        return socketOpen;
     }
 
     @Override
@@ -187,6 +215,7 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
         super.onPause();
         if ( socket != null ){
             socket.close();
+            socket = null;
         }
     }
 }

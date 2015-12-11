@@ -3,6 +3,7 @@ package com.tylorgarrett.notion.data;
 import com.tylorgarrett.notion.models.Course;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
+import com.tylorgarrett.notion.models.Recommendation;
 import com.tylorgarrett.notion.models.School;
 import com.tylorgarrett.notion.models.Section;
 import com.tylorgarrett.notion.models.Topic;
@@ -21,6 +22,7 @@ public class NotionData {
     private List<School> schools;
     private List<Course> courses;
     private Map<Course, List<Section>> sections;
+    private List<Recommendation> recommendationList;
 
     private static NotionData instance = null;
 
@@ -138,6 +140,14 @@ public class NotionData {
         if ( notebooks.contains(nb) ){
             notebooks.remove(nb);
         }
+    }
+
+    public List<Recommendation> getRecommendationList() {
+        return recommendationList;
+    }
+
+    public void setRecommendationList(List<Recommendation> recommendationList) {
+        this.recommendationList = recommendationList;
     }
 
     public List<School> getSchools() {
