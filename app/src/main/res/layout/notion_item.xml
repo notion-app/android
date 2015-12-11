@@ -29,6 +29,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/NotionYellow"
                     android:textSize="24sp"
+                    android:lines="1"
                     android:gravity="center_horizontal" />
 
             </LinearLayout>

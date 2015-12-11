@@ -41,6 +41,7 @@ import com.tylorgarrett.notion.models.LoginBody;
 import com.tylorgarrett.notion.models.RetrofitResponse;
 import com.tylorgarrett.notion.models.School;
 import com.tylorgarrett.notion.models.SetSchool;
+import com.tylorgarrett.notion.models.Topic;
 import com.tylorgarrett.notion.models.User;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
@@ -218,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 NotionData.getInstance().setNotebooks(response.body());
                 openMainFragment();
                 debugToast("Get User Subscriptions Success: " + response.message());
+                updateNotebookNotes();
             }
 
             @Override
@@ -300,5 +302,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
         }
         Log.d("logger", message);
+    }
+
+    public void updateNotebookNotes(){
+        List<Notebook> notebooksList = NotionData.getInstance().getNotebooks();
+        for (Notebook n: notebooksList){
+            getTheNotesAndUpdateTheDataInstance(n);
+        }
+    }
+
+    public void getTheNotesAndUpdateTheDataInstance(final Notebook n){
+        Call<List<Topic>> call = NotionService.getApi().getUserNotebookNotes(getCurrentUser().getFb_auth_token(), n.getNotebook_id(), true);
+        call.enqueue(new Callback<List<Topic>>() {
+            @Override
+            public void onResponse(Response<List<Topic>> response, Retrofit retrofit) {
+                n.setTopics(response.body());
+                debugToast("Get Notes MA Success: " + response.message());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                debugToast("Get Notes MA Failure: " + t.getMessage());
+            }
+        });
     }
 }
