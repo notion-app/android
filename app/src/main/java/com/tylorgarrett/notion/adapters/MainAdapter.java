@@ -71,6 +71,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             });
         } else if (data.get(position) instanceof Notebook ){
             notebook = (Notebook) data.get(position);
+            mainActivity.updateNotebookNotes();
             linearLayout.setBackgroundColor(mainActivity.getResources().getColor(R.color.NotionYellow));
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
             headerText.setText(notebook.getName());
