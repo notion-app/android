@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
@@ -63,6 +64,7 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
     String notebookID;
     String noteID;
     Topic topic;
+    Gson gson;
 
     boolean socketOpen = false;
 
@@ -87,6 +89,7 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
         notebookID = NotionData.getInstance().getNotebookByNoteId(noteID).getId();
         note = notionData.getNoteByNoteId(noteID);
         topic = notionData.getTopicByID(note.getTopic_id());
+        gson = new Gson();
         connectToWebSocket();
     }
 
@@ -175,21 +178,15 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
                 mainActivity.debugToast("Web Socket Connected: " + handshakedata.getHttpStatusMessage());
                 socketOpen = true;
                 socket.send(new Ping("ping").toString());
-                //keepAlive(socket);
+                keepAlive(socket);
             }
 
             @Override
             public void onMessage(String message) {
-                mainActivity.debugToast("Web Socket Incoming Message: " + message);
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(message);
-                    Recommendation newRecommendation = new Recommendation(jsonObject.getString("id"), jsonObject.getString("text"), jsonObject.getString("genesis"));
-                    mainActivity.debugToast("Web Socket Incoming Message: " + newRecommendation.toString());
-                    NotionData.getInstance().getRecommendationList().add(newRecommendation);
-                    //change the menu icon color
-                } catch (Exception e){
-                    mainActivity.debugToast("Web Socket Incoming Message: " + e.getMessage());
+                mainActivity.debugToast("Web Socket Incoming Message: 1 " + message);
+                WebSocketRequestBody webSocketRequestBody = gson.fromJson(message, WebSocketRequestBody.class);
+                if ( !webSocketRequestBody.getType().equals("pong") ) {
+                    NotionData.getInstance().getRecommendationList().add(webSocketRequestBody.getRecommendation());
                 }
             }
 
@@ -214,8 +211,11 @@ public class NoteEditFragment extends Fragment implements TextWatcher {
             public void run() {
                 try {
                     while (isSocketOpen()) {
-                        socket.send(new Ping("ping").toString());
-                        Thread.sleep(30000);
+                        Ping ping = new Ping("ping");
+                        String pingString = gson.toJson(ping);
+                        mainActivity.debugToast("While loop: " + pingString);
+                        socket.send(pingString);
+                        Thread.sleep(10000);
                     }
                 } catch (Exception e) {
                     e.getMessage();
