@@ -13,11 +13,14 @@ import com.tylorgarrett.notion.MainActivity;
 import com.tylorgarrett.notion.R;
 import com.tylorgarrett.notion.fragments.NoteContentFragment;
 import com.tylorgarrett.notion.fragments.NotebookNotesFragment;
-import com.tylorgarrett.notion.fragments.NotebooksFragment;
 import com.tylorgarrett.notion.models.Note;
 import com.tylorgarrett.notion.models.Notebook;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /*
  * Created by tylorgarrett on 9/21/15.
@@ -62,7 +65,37 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
             headerText.setText(note.getTitle());
             imageView.setBackground(mainActivity.getResources().getDrawable(R.drawable.note));
-            editedText.setText("Last Edited: " + note.getUpdated_at());
+           // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            SimpleDateFormat timeformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            timeformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            System.out.println("Last edited: " + note.getUpdated_at().toString().substring(0, 19) + " !!!! ");
+            try {
+                Date lastedited = timeformat.parse(note.getUpdated_at().toString().substring(0, 19));
+                Date rightnow = timeformat.parse(timeformat.format(new Date()));
+                System.out.println("lastedited: " + lastedited);
+                System.out.println("rightnow: " + rightnow);
+                long timediff = rightnow.getTime() - lastedited.getTime();
+                System.out.println(timediff);
+
+                timediff /= 1000;
+                if(timediff < 60) {
+                    editedText.setText("Last Edited: " + timediff + " seconds ago");
+                } else if (timediff < 3600) {
+                    editedText.setText("Last Edited: " + timediff/60 + " minutes ago");
+                } else if (timediff < 86400) {
+                    editedText.setText("Last Edited: " + timediff/3600 + " hours ago");
+                } else {
+                    editedText.setText("Last Edited: " + timediff/86400 + " days ago");
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+
+
             holder.v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -71,6 +104,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             });
         } else if (data.get(position) instanceof Notebook ){
             notebook = (Notebook) data.get(position);
+            mainActivity.updateNotebookNotes();
             linearLayout.setBackgroundColor(mainActivity.getResources().getColor(R.color.NotionYellow));
             headerText.setTextColor(mainActivity.getResources().getColor(R.color.NotionDark));
             headerText.setText(notebook.getName());
